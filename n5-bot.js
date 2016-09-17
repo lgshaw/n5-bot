@@ -43,6 +43,10 @@ bot.on("message", message =>
     i = 5;
     }
   }
+  if(input.startsWith("!LOCKOUT"))
+  {
+    var userChars = user;
+  }
   if(input.startsWith("!CHAR"))
   {
     var charName = words[1];

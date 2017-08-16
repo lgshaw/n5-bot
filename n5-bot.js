@@ -6,6 +6,8 @@ var bot = new Discord.Client();
 var wow = bnet.wow;
 var i = 5;
 
+const sumValues = obj => Object.values(obj).reduce((a, b) => a + b)
+
 bot.on("message", message =>
 {
   var input = message.content.toUpperCase();
@@ -18,15 +20,21 @@ bot.on("message", message =>
   }
   if(input == "DBS")
   {
-    message.channel.sendMessage("Don't be shit!");
+    message.channel.send("Don't be shit!");
   }
-  if(input == "!LEGION")
+  if(input == "!LORING")
   {
-    message.channel.sendMessage("Legion launches Tuesday 5pm AEST ya silly duffers!");
+    var random = Math.random() * 10;
+    if (random < 5)
+      {
+        message.channel.send("Good one Quin. Good one.");
+      } else {
+        message.channel.send("Wise words Quin. Elegant in their simplicity.");
+      };
   }
   if(input == "WOW")
   {
-    message.channel.sendMessage( "WoW still loves you.");
+    message.channel.send( "WoW still loves you.");
   }
   if(user === "Quinas")
   {
@@ -36,48 +44,73 @@ bot.on("message", message =>
       var random = Math.random() * 10;
       if (random < 5)
         {
-          message.channel.sendMessage("Good one Quin. Good one.");
+          message.channel.send("Good one Quin. Good one.");
         } else {
-          message.channel.sendMessage("Wise words Quin. Elegant in their simplicity.");
+          message.channel.send("Wise words Quin. Elegant in their simplicity.");
         };
     i = 5;
     }
   }
-  if(input.startsWith("!LOCKOUT"))
-  {
-    var userChars = user;
-  }
+
   if(input.startsWith("!CHAR"))
   {
+    message.channel.send("Fetching data...");
     var charName = words[1];
+    var region = words[2];
+    if (!words[2])
+    { region = "caelestrasz" };
     if (charName) {
-      getCharData(charName, function(info) {
+      getCharData(charName, region, function(info) {
         if(info.status == "nok"){
-          message.channel.sendMessage("Character not found - try again");
+          message.channel.send("Character not found - try again");
         } else {
-        makeImage = charImage + info.thumbnail;
-        message.channel.sendMessage('**' + info.name + '**, ' + classLookup[info.class] + ', Level: ' + info.level + ' ' + info.talents[0].spec.role +', iLvl: ' + info.items.averageItemLevel );
+        imgURL = charImage + info.thumbnail;
+        playerTitles = info.titles;
+        console.log(info.name);
+        var artifactRank = artifactWeapon(info);
+        var activePlayerTitle = searchObj(playerTitles, true)[0].name.replace(/([%s])/g, "");
+        console.log(activePlayerTitle);
+        message.channel.send({embed: {
+          color: classLookup[info.class].color,
+          author: {
+            name: info.name + activePlayerTitle,
+            url: 'https://worldofwarcraft.com/en-us/character/'+region+'/'+charName,
+          },
+          thumbnail: {
+            url: imgURL
+          },
+          fields: [{
+            name: info.talents[0].spec.name + ' ' + classLookup[info.class].name,
+            value: info.items.averageItemLevel +  ' iLvl - Artifact Rank: ' + artifactRank,
+          },
+          {
+            name: "Armory",
+            value: "nothing working yet",
+          },
+          {
+            name: "Raid progression",
+            value: "nothing working yet",
+          },
+        ],
+        }});
         };
       });
     } else {
-      message.channel.sendMessage('Please submit a character name (!char *name*)');
+      message.channel.send('Please submit a character name (!char *name*)');
     }
   }
-  if(input === "!LIST")
-  {
-    message.channel.sendMessage('*Tanks:* ' + classList.tanks + '\n' + "*Heals:* " + classList.healers + '\n' + "*DPS:* " + classList.dps);
-  }
+
   if(input === "!STATUS")
   {
     getRealmStatus(function(info) {
       if(info.status == "nok"){
-        message.channel.sendMessage("Error retrieving realm status");
+        message.channel.send("Error retrieving realm status");
       } else {
         if (info.realms[1].status = true)
         {
-          message.channel.sendMessage('Caelestrasz is **UP**' );
+          message.channel.send('Caelestrasz is **UP**' );
         } else {
-          message.channel.sendMessage('Caelestrasz is **DOWN**' );
+          message.channel.send('Caelestrasz is **DOWN**' );
         }
       };
     });
@@ -87,33 +120,52 @@ bot.on("message", message =>
 bot.login("MjE4NzA1NjM1Njk5NTg5MTIx.CqHFCg.sTI60tL_bHvFfO-ksa0biM8-rms");
 var apikey = "qnehqjeq658chy2ak9qqkp7q4ft9gmu4";
 
-var charImage = "http://render-api-us.worldofwarcraft.com/static-render/us/";
+var charImage = "http://render-us.worldofwarcraft.com/character/";
 
 var classLookup =
-  [
-    "God",
-    "Warrior",
-    "Paladin",
-    "Hunter",
-    "Rogue",
-    "Priest",
-    "Death Knight",
-    "Shaman",
-    "Mage",
-    "Warlock",
-    "Monk",
-    "Druid",
-    "Demon Hunter",
-  ];
+  [{
+    "name": "",
+    "color": "",
+  }, {
+      "name": "Warrior",
+      "color": 0xc79c6e,
+  }, {
+    "name": "Paladin",
+    "color": 0xf58cba,
+  }, {
+    "name": "Hunter",
+    "color": 0xABD473,
+  }, {
+    "name": "Rogue",
+    "color": 0xFFF569,
+  }, {
+    "name": "Priest",
+    "color": 0xFFFFFF,
+  }, {
+    "name": "Death Knight",
+    "color": 0xC41F3B,
+  }, {
+    "name": "Shaman",
+    "color": 0x0070DE,
+  }, {
+    "name": "Mage",
+    "color": 0x69CCF0,
+  }, {
+    "name": "Warlock",
+    "color": 0x9482C9,
+  }, {
+    "name": "Monk",
+    "color": 0x00FF96,
+  }, {
+    "name": "Druid",
+    "color": 0xff7d0a,
+  }, {
+    "name": "Demon Hunter",
+    "color": 0xA330C9,
+  }];
 
-var classList =  {
-  "tanks": ["Shaweaver", "Rakk"],
-  "healers": ["Wadis", "Saltaire"],
-  "dps": ["Quinos", "Maelkorin", "Missmini", "Mald"]
-};
-
-function getCharData(charName, callback)  {
-  request('https://us.api.battle.net/wow/character/Caelestrasz/'+charName+'?fields=items,talents&locale=en_US&apikey='+apikey, function (error, response, result) {
+function getCharData(charName, region, callback)  {
+  request('https://us.api.battle.net/wow/character/'+region+'/'+charName+'?fields=items,titles,talents,progression&locale=en_US&apikey='+apikey, function (error, response, result) {
     if (!error && response.statusCode == 200) {
     var info = JSON.parse(result);
     console.log(info);
@@ -139,3 +191,18 @@ function getRealmStatus(callback)  {
   };
   });
 }
+
+function searchObj (obj, value) {
+  var result = obj.filter(function( e ) {
+    return e.selected === value;
+  });
+  return result;
+}
+
+function artifactWeapon(info) {
+  if (info.items.mainHand.artifactTraits.length < 1) {
+    return
+  }
+  var result = (sumValues(info.items.mainHand.artifactTraits.map(function(a) { return a.rank;})))-3;
+  return result;
+};

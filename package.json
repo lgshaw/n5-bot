@@ -5,7 +5,7 @@
   "main": "n5-bot.js",
   "dependencies": {
     "battlenet-api": "^0.13.0",
-    "discord.js": "^9.1.0",
+    "discord.js": "^11.1.0",
     "jquery": "^3.1.0",
     "request": "^2.74.0"
   },

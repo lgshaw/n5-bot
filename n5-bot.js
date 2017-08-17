@@ -68,6 +68,7 @@ bot.on("message", message =>
           message.channel.send("Character not found - try again");
         } else {
           imgURL = charImage + info.thumbnail;
+          console.log(imgURL);
           playerTitles = info.titles;
           var artifactRank = artifactWeapon(info);
           message.channel.send({embed: {
@@ -76,21 +77,24 @@ bot.on("message", message =>
               name: checkTitleExists(info.name, playerTitles),
               url: `https://worldofwarcraft.com/en-us/character/${region}/${charName}`,
             },
-            thumbnail: {
+            /*thumbnail: {
               url: imgURL
+            },*/
+            image: {
+              url: imgURL.replace(/(avatar)/g, 'inset')
             },
             fields: [{
               name: `${info.talents[0].spec.name} ${classLookup[info.class].name}`,
               value: `${info.items.averageItemLevel} iLvl - Artifact Rank: ${artifactRank}`,
             },
-            {
+            /*{
               name: "Armory",
               value: "NYI",
             },
             {
               name: "Raid progression",
               value: "NYI",
-            },
+            },*/
           ],
           }});
         };

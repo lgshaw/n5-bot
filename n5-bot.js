@@ -2,6 +2,8 @@ var Discord = require("discord.js");
 var bnet = require("battlenet-api")('qnehqjeq658chy2ak9qqkp7q4ft9gmu4');
 var request = require('request');
 
+var classLookup = require('./classLookup.js');
+
 var bot = new Discord.Client();
 var wow = bnet.wow;
 var i = 5;
@@ -74,7 +76,7 @@ bot.on("message", message =>
           color: classLookup[info.class].color,
           author: {
             name: info.name + activePlayerTitle,
-            url: 'https://worldofwarcraft.com/en-us/character/'+region+'/'+charName,
+            url: `https://worldofwarcraft.com/en-us/character/${region}/${charName}`,
           },
           thumbnail: {
             url: imgURL
@@ -85,11 +87,11 @@ bot.on("message", message =>
           },
           {
             name: "Armory",
-            value: "nothing working yet",
+            value: "NYI",
           },
           {
             name: "Raid progression",
-            value: "nothing working yet",
+            value: "NYI",
           },
         ],
         }});
@@ -122,50 +124,10 @@ var apikey = "qnehqjeq658chy2ak9qqkp7q4ft9gmu4";
 
 var charImage = "http://render-us.worldofwarcraft.com/character/";
 
-var classLookup =
-  [{
-    "name": "",
-    "color": "",
-  }, {
-      "name": "Warrior",
-      "color": 0xc79c6e,
-  }, {
-    "name": "Paladin",
-    "color": 0xf58cba,
-  }, {
-    "name": "Hunter",
-    "color": 0xABD473,
-  }, {
-    "name": "Rogue",
-    "color": 0xFFF569,
-  }, {
-    "name": "Priest",
-    "color": 0xFFFFFF,
-  }, {
-    "name": "Death Knight",
-    "color": 0xC41F3B,
-  }, {
-    "name": "Shaman",
-    "color": 0x0070DE,
-  }, {
-    "name": "Mage",
-    "color": 0x69CCF0,
-  }, {
-    "name": "Warlock",
-    "color": 0x9482C9,
-  }, {
-    "name": "Monk",
-    "color": 0x00FF96,
-  }, {
-    "name": "Druid",
-    "color": 0xff7d0a,
-  }, {
-    "name": "Demon Hunter",
-    "color": 0xA330C9,
-  }];
+
 
 function getCharData(charName, region, callback)  {
-  request('https://us.api.battle.net/wow/character/'+region+'/'+charName+'?fields=items,titles,talents,progression&locale=en_US&apikey='+apikey, function (error, response, result) {
+  request(`https://us.api.battle.net/wow/character/${region}/${charName}?fields=items,titles,talents,progression&locale=en_US&apikey=${apikey}`, function (error, response, result) {
     if (!error && response.statusCode == 200) {
     var info = JSON.parse(result);
     console.log(info);

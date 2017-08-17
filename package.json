@@ -11,8 +11,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node n5-bot.js"
   },
-  "author": "",
+  "author": "Liam",
   "license": "ISC"
 }

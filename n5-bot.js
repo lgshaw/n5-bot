@@ -4,14 +4,14 @@ var request = require('request');
 
 var classLookup = require('./classLookup.js');
 
-var bot = new Discord.Client();
+var client = new Discord.Client();
 var wow = bnet.wow;
 var i = 5;
 
 const charImage = "http://render-us.worldofwarcraft.com/character/";
-const sumValues = obj => Object.values(obj).reduce((a, b) => a + b)
+const sumValues = obj => Object.values(obj).reduce((a, b) => a + b);
 
-bot.on("message", message =>
+client.on("message", message =>
 {
   var input = message.content.toUpperCase();
   var words = message.content.split(' ');
@@ -57,52 +57,49 @@ bot.on("message", message =>
 
   if(input.startsWith("!CHAR"))
   {
-    message.channel.send("Fetching data...");
-    var charName = words[1];
-    var region = words[2];
-    if (!words[2])
-    { region = "caelestrasz" };
-    if (charName) {
-      getCharData(charName, region, function(info) {
-        if(info.status == "nok"){
-          message.channel.send("Character not found - try again");
-        } else {
-          imgURL = charImage + info.thumbnail;
-          console.log(imgURL);
-          playerTitles = info.titles;
-          var artifactRank = artifactWeapon(info);
-          message.channel.send({embed: {
-            color: classLookup[info.class].color,
-            author: {
-              name: checkTitleExists(info.name, playerTitles),
-              url: `https://worldofwarcraft.com/en-us/character/${region}/${charName}`,
-            },
-            /*thumbnail: {
-              url: imgURL
-            },*/
-            image: {
-              url: imgURL.replace(/(avatar)/g, 'inset')
-            },
-            fields: [{
-              name: `${info.talents[0].spec.name} ${classLookup[info.class].name}`,
-              value: `${info.items.averageItemLevel} iLvl - Artifact Rank: ${artifactRank}`,
-            },
-            /*{
-              name: "Armory",
-              value: "NYI",
-            },
-            {
-              name: "Raid progression",
-              value: "NYI",
-            },*/
-          ],
+    message.channel.send("Fetching data...")
+    .then(message => {
+      var charName = words[1];
+      var region = words[2];
+      if (!words[2])
+      { region = "caelestrasz" };
+      if (charName) {
+        getCharData(charName, region, function(info) {
+          if(info.status == "nok"){
+            message.channel.send("Character not found - try again");
+          } else {
+            imgURL = charImage + info.thumbnail;
+            console.log(imgURL);
+            playerTitles = info.titles;
+            message.channel.send({embed: {
+              color: classLookup[info.class].color,
+              author: {
+                name: checkTitleExists(info.name, playerTitles),
+                url: `https://worldofwarcraft.com/en-us/character/${region}/${charName}`,
+              },
+              /*thumbnail: {
+                url: imgURL
+              },*/
+              image: {
+                url: imgURL.replace(/(avatar)/g, 'inset')
+              },
+              fields: [{
+                name: `${info.level} ${info.talents[0].spec.name} ${classLookup[info.class].name}`,
+                value: `${info.items.averageItemLevel} iLvl - Artifact Rank: ${artifactWeapon(info)}`,
+              },
+              {
+                name: "Legion Raid Progression:",
+                value: `**EN:** ${raidProgressCheck(info.progression.raids[35])}, **ToV:** ${raidProgressCheck(info.progression.raids[36])}, **NH:** ${raidProgressCheck(info.progression.raids[37])}, **ToS:** ${raidProgressCheck(info.progression.raids[38])}`,
+              },
+            ],
           }});
-        };
-      });
-    } else {
-      message.channel.send('Please submit a character name (!char *name*)');
+          };
+        });
+      } else {
+        message.channel.send('Please submit a character name (!char *name*)');
+      }
     }
-  }
+  )};
 
   if(input === "!STATUS")
   {
@@ -121,7 +118,7 @@ bot.on("message", message =>
   }
 });
 
-bot.login("MjE4NzA1NjM1Njk5NTg5MTIx.CqHFCg.sTI60tL_bHvFfO-ksa0biM8-rms");
+client.login("MjE4NzA1NjM1Njk5NTg5MTIx.CqHFCg.sTI60tL_bHvFfO-ksa0biM8-rms");
 var apikey = "qnehqjeq658chy2ak9qqkp7q4ft9gmu4";
 
 function getCharData(charName, region, callback)  {
@@ -159,6 +156,25 @@ function searchObj (obj, value) {
   return result;
 }
 
+function raidProgressCheck(data) {
+  console.log(data);
+  var bossTotal = data.bosses.length;
+  bossKills = function() {
+    return bossKills;
+  };
+  if(data.mythic > 0){
+    return `${bossKills}/${bossTotal} M`;
+  } else if(data.heroic > 0){
+    return `${bossKills}/${bossTotal} H`;
+  } else if(data.normal > 0){
+    return `${bossKills}/${bossTotal} N`;
+  } else if(data.lfr > 0){
+    return `${bossKills}/${bossTotal} LFR`;
+  } else {
+    return '`NONE`';
+  };
+};
+
 function checkTitleExists(player, data) {
   if (searchObj(data, true).length > 0) {
     var activePlayerTitle = searchObj(playerTitles, true)[0].name.replace(/(%s)/g, player);
@@ -177,3 +193,5 @@ function artifactWeapon(info) {
   var result = (sumValues(info.items.mainHand.artifactTraits.map(function(a) { return a.rank;})))-3;
   return result;
 };
+
+console.log("Beep boop - bot running!");

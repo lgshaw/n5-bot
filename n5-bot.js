@@ -157,31 +157,36 @@ function searchObj (obj, value) {
 }
 
 function raidProgressCheck(data) {
-  console.log(data);
   var bossTotal = data.bosses.length;
-  bossKills = function() {
-    return bossKills;
+  function bossKills(type) {
+    var kills = [];
+    for (i=0; i < bossTotal; i++)
+      {
+          var n = data.bosses[i][type];
+			    if(n > 0){
+            kills.push(n);
+          }
+      }
+    return kills.length;
   };
   if(data.mythic > 0){
-    return `${bossKills}/${bossTotal} M`;
+    return `${bossKills('mythicKills')}/${bossTotal} M`;
   } else if(data.heroic > 0){
-    return `${bossKills}/${bossTotal} H`;
+    return `${bossKills('heroicKills')}/${bossTotal} H`;
   } else if(data.normal > 0){
-    return `${bossKills}/${bossTotal} N`;
+    return `${bossKills('normalKills')}/${bossTotal} N`;
   } else if(data.lfr > 0){
-    return `${bossKills}/${bossTotal} LFR`;
+    return `${bossKills('lfrKills')}/${bossTotal} LFR`;
   } else {
-    return '`NONE`';
+    return '`-`';
   };
 };
 
 function checkTitleExists(player, data) {
   if (searchObj(data, true).length > 0) {
     var activePlayerTitle = searchObj(playerTitles, true)[0].name.replace(/(%s)/g, player);
-    console.log(activePlayerTitle);
     return activePlayerTitle;
   } else {
-    console.log(player);
     return player;
   };
 };

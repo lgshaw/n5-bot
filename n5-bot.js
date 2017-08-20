@@ -149,9 +149,9 @@ function getRealmStatus(callback)  {
   });
 }
 
-function searchObj (obj, value) {
+function searchObj (obj, key, value) {
   var result = obj.filter(function( e ) {
-    return e.selected === value;
+    return e[key] === value;
   });
   return result;
 }
@@ -183,8 +183,8 @@ function raidProgressCheck(data) {
 };
 
 function checkTitleExists(player, data) {
-  if (searchObj(data, true).length > 0) {
-    var activePlayerTitle = searchObj(playerTitles, true)[0].name.replace(/(%s)/g, player);
+  if (searchObj(data,'selected', true).length > 0) {
+    var activePlayerTitle = searchObj(playerTitles,'selected', true)[0].name.replace(/(%s)/g, player);
     return activePlayerTitle;
   } else {
     return player;
@@ -192,10 +192,14 @@ function checkTitleExists(player, data) {
 };
 
 function artifactWeapon(info) {
+  var weapon = 'mainHand';
   if (info.items.mainHand.artifactTraits.length < 1) {
+    weapon = 'offHand';
+    if (info.items.offHand.artifactTraits.length < 1) {
     return;
-  }
-  var result = (sumValues(info.items.mainHand.artifactTraits.map(function(a) { return a.rank;})))-3;
+    }
+  };
+  var result = (sumValues(info.items[weapon].artifactTraits.map(function(a) { return a.rank;})))-3;
   return result;
 };
 

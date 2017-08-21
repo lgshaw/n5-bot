@@ -88,8 +88,12 @@ client.on("message", message =>
                 value: `${info.items.averageItemLevel} iLvl - Artifact Rank: ${artifactWeapon(info)}`,
               },
               {
-                name: "Legion Raid Progression:",
+                name: "Legion Progression:",
                 value: `**EN:** ${raidProgressCheck(info.progression.raids[35])}, **ToV:** ${raidProgressCheck(info.progression.raids[36])}, **NH:** ${raidProgressCheck(info.progression.raids[37])}, **ToS:** ${raidProgressCheck(info.progression.raids[38])}`,
+              },
+              {
+                name: "Mythic+ dungeons completed:",
+                value: `**2+:** ${mythicPlusCheck(info, 33096)}, **5+:** ${mythicPlusCheck(info, 33097)}, **10+:** ${mythicPlusCheck(info, 33098)}, **15+:** ${mythicPlusCheck(info, criteria)}`,
               },
             ],
           }});
@@ -122,7 +126,7 @@ client.login("MjE4NzA1NjM1Njk5NTg5MTIx.CqHFCg.sTI60tL_bHvFfO-ksa0biM8-rms");
 var apikey = "qnehqjeq658chy2ak9qqkp7q4ft9gmu4";
 
 function getCharData(charName, region, callback)  {
-  request(`https://us.api.battle.net/wow/character/${region}/${charName}?fields=items,titles,talents,progression&locale=en_US&apikey=${apikey}`, function (error, response, result) {
+  request(`https://us.api.battle.net/wow/character/${region}/${charName}?fields=items,titles,talents,progression,achievements&locale=en_US&apikey=${apikey}`, function (error, response, result) {
     if (!error && response.statusCode == 200) {
       var info = JSON.parse(result);
       console.log(info);
@@ -180,6 +184,19 @@ function raidProgressCheck(data) {
   } else {
     return '`-`';
   };
+};
+
+function mythicPlusCheck(data, criteria){
+  // var achieves = [11183,11184,11185,11162];
+  var criteriaList = data.achievements.criteria;
+  var criteriaQty = data.achievements.criteriaQuantity;
+
+  var qty = criteraQty[criteriaList.indexOf(criteria)];
+  if(qty === -1){
+    return '-';
+  } else {
+    return qty;
+  }
 };
 
 function checkTitleExists(player, data) {

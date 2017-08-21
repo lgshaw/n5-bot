@@ -95,6 +95,10 @@ client.on("message", message =>
                 name: "Mythic+ dungeons completed:",
                 value: `**2+:** ${mythicPlusCheck(info, 33096)}, **5+:** ${mythicPlusCheck(info, 33097)}, **10+:** ${mythicPlusCheck(info, 33098)}, **15+:** ${mythicPlusCheck(info, criteria)}`,
               },
+              {
+                name: "Fun fact:",
+                value: {funFactCheck(info)}
+              }
             ],
           }});
           };
@@ -126,7 +130,7 @@ client.login("MjE4NzA1NjM1Njk5NTg5MTIx.CqHFCg.sTI60tL_bHvFfO-ksa0biM8-rms");
 var apikey = "qnehqjeq658chy2ak9qqkp7q4ft9gmu4";
 
 function getCharData(charName, region, callback)  {
-  request(`https://us.api.battle.net/wow/character/${region}/${charName}?fields=items,titles,talents,progression,achievements&locale=en_US&apikey=${apikey}`, function (error, response, result) {
+  request(`https://us.api.battle.net/wow/character/${region}/${charName}?fields=items,titles,talents,progression,achievements,statistics&locale=en_US&apikey=${apikey}`, function (error, response, result) {
     if (!error && response.statusCode == 200) {
       var info = JSON.parse(result);
       console.log(info);
@@ -219,5 +223,21 @@ function artifactWeapon(info) {
   var result = (sumValues(info.items[weapon].artifactTraits.map(function(a) { return a.rank;})))-3;
   return result;
 };
+
+function funFactCheck(data) {
+  // Get length of subCategories
+  var n = getRandomInt(0, data.statistics.subCategories.length);
+  // Get all stats within the above subCategory
+  var i = getRandomInt(0, data.statistics.subCategories[n].statistics.length);
+  stat = data.statistics.subCategories[n].statistics[i].name;
+  statQty = data.statistics.subCategories[n].statistics[i].quantity;
+  return `${stats}: ${statQty}`;
+};
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+}
 
 console.log("Beep boop - bot running!");

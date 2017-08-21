@@ -3,10 +3,13 @@ var bnet = require("battlenet-api")('qnehqjeq658chy2ak9qqkp7q4ft9gmu4');
 var request = require('request');
 
 var classLookup = require('./classLookup.js');
+var config = require('./config.js');
 
 var client = new Discord.Client();
 var wow = bnet.wow;
-var i = 5;
+
+client.login("MjE4NzA1NjM1Njk5NTg5MTIx.CqHFCg.sTI60tL_bHvFfO-ksa0biM8-rms");
+var apikey = config.apikey;
 
 const charImage = "http://render-us.worldofwarcraft.com/character/";
 const sumValues = obj => Object.values(obj).reduce((a, b) => a + b);
@@ -38,21 +41,6 @@ client.on("message", message =>
   if(input == "WOW")
   {
     message.channel.send( "WoW still loves you.");
-  }
-  if(user === "Quinas")
-  {
-    if (i > 0) {
-      --i
-    } else {
-      var random = Math.random() * 10;
-      if (random < 5)
-        {
-          message.channel.send("Good one Quin. Good one.");
-        } else {
-          message.channel.send("Wise words Quin. Elegant in their simplicity.");
-        };
-    i = 5;
-    }
   }
 
   if(input.startsWith("!CHAR"))
@@ -125,9 +113,6 @@ client.on("message", message =>
     });
   }
 });
-
-client.login("MjE4NzA1NjM1Njk5NTg5MTIx.CqHFCg.sTI60tL_bHvFfO-ksa0biM8-rms");
-var apikey = "qnehqjeq658chy2ak9qqkp7q4ft9gmu4";
 
 function getCharData(charName, region, callback)  {
   request(`https://us.api.battle.net/wow/character/${region}/${charName}?fields=items,titles,talents,progression,achievements,statistics&locale=en_US&apikey=${apikey}`, function (error, response, result) {
@@ -232,6 +217,7 @@ function funFactCheck(data) {
   stat = data.statistics.subCategories[n].statistics[i].name;
   statQty = data.statistics.subCategories[n].statistics[i].quantity;
   return `${stats}: ${statQty}`;
+  //TODO Some subCategories contain a further subCategories array in addition to statistics array. Dig into these stats as well.
 };
 
 function getRandomInt(min, max) {

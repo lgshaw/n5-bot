@@ -81,11 +81,11 @@ client.on("message", message =>
               },
               {
                 name: "Mythic+ dungeons completed:",
-                value: `**2+:** ${mythicPlusCheck(info, 33096)}, **5+:** ${mythicPlusCheck(info, 33097)}, **10+:** ${mythicPlusCheck(info, 33098)}, **15+:** ${mythicPlusCheck(info, criteria)}`,
+                value: `**2+:** ${mythicPlusCheck(info, 33096)}  **5+:** ${mythicPlusCheck(info, 33097)}  **10+:** ${mythicPlusCheck(info, 33098)}  **15+:** ${mythicPlusCheck(info, 32028)}`,
               },
               {
                 name: "Fun fact:",
-                value: {funFactCheck(info)}
+                value: funFactCheck(info)
               }
             ],
           }});
@@ -175,13 +175,13 @@ function raidProgressCheck(data) {
   };
 };
 
-function mythicPlusCheck(data, criteria){
+function mythicPlusCheck(data, criteriaID){
   // var achieves = [11183,11184,11185,11162];
   var criteriaList = data.achievements.criteria;
   var criteriaQty = data.achievements.criteriaQuantity;
 
-  var qty = criteraQty[criteriaList.indexOf(criteria)];
-  if(qty === -1){
+  var qty = criteriaQty[criteriaList.indexOf(criteriaID)];
+  if(!qty){
     return '-';
   } else {
     return qty;
@@ -201,11 +201,16 @@ function artifactWeapon(info) {
   var weapon = 'mainHand';
   if (info.items.mainHand.artifactTraits.length < 1) {
     weapon = 'offHand';
-    if (info.items.offHand.artifactTraits.length < 1) {
-    return;
+    if (!info.items.offHand || info.items.offHand.artifactTraits.length < 1) {
+    weapon = false;
     }
   };
-  var result = (sumValues(info.items[weapon].artifactTraits.map(function(a) { return a.rank;})))-3;
+  console.log(weapon);
+  if(weapon){
+    var result = (sumValues(info.items[weapon].artifactTraits.map(function(a) { return a.rank;})))-3;
+  } else {
+    result = '-';
+  };
   return result;
 };
 
@@ -216,7 +221,7 @@ function funFactCheck(data) {
   var i = getRandomInt(0, data.statistics.subCategories[n].statistics.length);
   stat = data.statistics.subCategories[n].statistics[i].name;
   statQty = data.statistics.subCategories[n].statistics[i].quantity;
-  return `${stats}: ${statQty}`;
+  return `${stat}: ${statQty.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
   //TODO Some subCategories contain a further subCategories array in addition to statistics array. Dig into these stats as well.
 };
 

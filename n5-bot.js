@@ -57,7 +57,7 @@ client.on("message", message =>
             message.channel.send("Character not found - try again");
           } else {
             imgURL = charImage + info.thumbnail;
-            console.log(imgURL);
+            console.log(`${info.name}\n${imgURL}`);
             playerTitles = info.titles;
             message.channel.send({embed: {
               color: classLookup[info.class].color,
@@ -118,11 +118,9 @@ function getCharData(charName, region, callback)  {
   request(`https://us.api.battle.net/wow/character/${region}/${charName}?fields=items,titles,talents,progression,achievements,statistics&locale=en_US&apikey=${apikey}`, function (error, response, result) {
     if (!error && response.statusCode == 200) {
       var info = JSON.parse(result);
-      console.log(info);
       callback(info);
     } else {
       var info = JSON.parse(result);
-      console.log(info);
       callback(info);
     };
   });
@@ -132,11 +130,9 @@ function getRealmStatus(callback)  {
   request(`https://us.api.battle.net/wow/realm/status?realms=caelestrasz,barthilas&locale=en_US&apikey=${apikey}`, function (error, response, result) {
     if (!error && response.statusCode == 200) {
       var info = JSON.parse(result);
-      console.log(info);
       callback(info);
     } else {
       var info = JSON.parse(result);
-      console.log(info);
       callback(info);
     };
   });

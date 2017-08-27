@@ -211,14 +211,18 @@ function artifactWeapon(info) {
 };
 
 function funFactCheck(data) {
-  // Get length of subCategories
-  var n = getRandomInt(0, data.statistics.subCategories.length);
-  // Get all stats within the above subCategory
-  var i = getRandomInt(0, data.statistics.subCategories[n].statistics.length);
-  stat = data.statistics.subCategories[n].statistics[i].name;
-  statQty = data.statistics.subCategories[n].statistics[i].quantity;
-  return `${stat}: ${statQty.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
-  //TODO Some subCategories contain a further subCategories array in addition to statistics array. Dig into these stats as well.
+  var stat;
+  var statQty = 0;
+	while(statQty === 0){
+        // Get length of subCategories
+        var n = getRandomInt(0, data.statistics.subCategories.length);
+        // Get all stats within the above subCategory
+        var i = getRandomInt(0, data.statistics.subCategories[n].statistics.length);
+        stat = data.statistics.subCategories[n].statistics[i].name;
+        statQty = data.statistics.subCategories[n].statistics[i].quantity;
+    }
+
+    return (`${stat}: ${statQty.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`);
 };
 
 function getRandomInt(min, max) {

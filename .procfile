@@ -1,1 +1,1 @@
-web: node n5-bot.js
+worker: node n5-bot.js

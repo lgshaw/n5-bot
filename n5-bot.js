@@ -205,8 +205,11 @@ function artifactWeapon(info) {
   if(weapon){
     var result = (sumValues(info.items[weapon].artifactTraits.map(function(a) { return a.rank;})))-3;
   } else {
-    result = '-';
+    result = 0;
   };
+  if (result < 0) {
+    result = 0;
+  }
   return result;
 };
 

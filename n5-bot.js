@@ -42,6 +42,28 @@ client.on("message", message =>
   {
     message.channel.send( "WoW still loves you.");
   }
+  if(input == "!ADDONS")
+  {
+    message.channel.send({embed: {
+      fields: [{
+        name: "ADDONS",
+        value: ""
+      },
+      {
+        name: "Basically required:",
+        value: "DBM, Garrison Mission Manager, Details!"
+      },
+      {
+        name: "Quality of life:",
+        value: "Leatrix Plus, Auctionator, BuyEmAll, DialogKey, SellJunk, Handy Notes"
+      },
+      {
+        name: "UI Customisation:",
+        value: "Bartender, Weak Auras, Bagnon"
+      }
+    ],
+    }});
+  }
 
   if(input.startsWith("!CHAR"))
   {

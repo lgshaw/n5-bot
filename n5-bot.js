@@ -47,7 +47,7 @@ client.on("message", message =>
     message.channel.send({embed: {
       fields: [{
         name: "ADDONS",
-        value: ""
+        value: " "
       },
       {
         name: "Basically required:",

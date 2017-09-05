@@ -47,19 +47,19 @@ client.on("message", message =>
     message.channel.send({embed: {
       fields: [{
         name: "ADDONS",
-        value: " "
+        value: "---",
       },
       {
         name: "Basically required:",
-        value: "DBM, Garrison Mission Manager, Details!"
+        value: "DBM, Garrison Mission Manager, Details!",
       },
       {
         name: "Quality of life:",
-        value: "Leatrix Plus, Auctionator, BuyEmAll, DialogKey, SellJunk, Handy Notes"
+        value: "Leatrix Plus, Auctionator, BuyEmAll, DialogKey, SellJunk, Handy Notes",
       },
       {
         name: "UI Customisation:",
-        value: "Bartender, Weak Auras, Bagnon"
+        value: "Bartender, Weak Auras, Bagnon",
       }
     ],
     }});

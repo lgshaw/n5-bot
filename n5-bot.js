@@ -47,19 +47,19 @@ client.on("message", message =>
     message.channel.send({embed: {
       fields: [{
         name: "ADDONS",
-        value: ""
+        value: "---",
       },
       {
         name: "Basically required:",
-        value: "DBM, Garrison Mission Manager, Details!"
+        value: "DBM, Garrison Mission Manager, Details!",
       },
       {
         name: "Quality of life:",
-        value: "Leatrix Plus, Auctionator, BuyEmAll, DialogKey, SellJunk, Handy Notes"
+        value: "Leatrix Plus, Auctionator, BuyEmAll, DialogKey, SellJunk, Handy Notes",
       },
       {
         name: "UI Customisation:",
-        value: "Bartender, Weak Auras, Bagnon"
+        value: "Bartender, Weak Auras, Bagnon",
       }
     ],
     }});
@@ -136,6 +136,35 @@ client.on("message", message =>
   }
 });
 
+if(input.startsWith("!AFFIXES"))
+{
+  message.channel.send("Fetching data...")
+  .then(message => {
+      getMythicPlusAffixes(us, function(info) {
+        if(info.status == "nok"){
+          message.channel.send("Error retrieving data");
+        } else {
+          message.channel.send({embed: {
+            fields: [{
+              name: info.affix_details[0].name,
+              value: info.affix_details[0].description,
+            },
+            {
+              name: info.affix_details[1].name,
+              value: info.affix_details[1].description,
+            },
+            {
+              name: info.affix_details[2].name,
+              value: info.affix_details[2].description,
+            },
+          ],
+        }});
+        };
+      });
+    }
+  }
+)};
+
 function getCharData(charName, region, callback)  {
   request(`https://us.api.battle.net/wow/character/${region}/${charName}?fields=items,titles,talents,progression,achievements,statistics&locale=en_US&apikey=${apikey}`, function (error, response, result) {
     if (!error && response.statusCode == 200) {
@@ -150,6 +179,18 @@ function getCharData(charName, region, callback)  {
 
 function getRealmStatus(callback)  {
   request(`https://us.api.battle.net/wow/realm/status?realms=caelestrasz,barthilas&locale=en_US&apikey=${apikey}`, function (error, response, result) {
+    if (!error && response.statusCode == 200) {
+      var info = JSON.parse(result);
+      callback(info);
+    } else {
+      var info = JSON.parse(result);
+      callback(info);
+    };
+  });
+}
+
+function getMythicPlusAffixes(region, callback) {
+  request(`https://raider.io/api/v1/mythic-plus/affixes?region=${region}`, function (error, response, result) {
     if (!error && response.statusCode == 200) {
       var info = JSON.parse(result);
       callback(info);

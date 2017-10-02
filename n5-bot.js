@@ -20,28 +20,6 @@ client.on("message", message =>
   var words = message.content.split(' ');
   var user = message.author.name;
 
-  if(input === "HI")
-  {
-    message.reply("Ni hao!");
-  }
-  if(input == "DBS")
-  {
-    message.channel.send("Don't be shit!");
-  }
-  if(input == "!LORING")
-  {
-    var random = Math.random() * 10;
-    if (random < 5)
-      {
-        message.channel.send("Good one Quin. Good one.");
-      } else {
-        message.channel.send("Wise words Quin. Elegant in their simplicity.");
-      };
-  }
-  if(input == "WOW")
-  {
-    message.channel.send( "WoW still loves you.");
-  }
   if(input == "!ADDONS")
   {
     message.channel.send({embed: {
@@ -78,6 +56,7 @@ client.on("message", message =>
           if(info.status == "nok"){
             message.channel.send("Character not found - try again");
           } else {
+            message.delete();
             imgURL = charImage + info.thumbnail;
             console.log(`${info.name}\n${imgURL}`);
             playerTitles = info.titles;

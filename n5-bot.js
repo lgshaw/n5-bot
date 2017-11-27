@@ -8,7 +8,7 @@ var config = require('./config.js');
 var client = new Discord.Client();
 var wow = bnet.wow;
 
-client.login("MjE4NzA1NjM1Njk5NTg5MTIx.CqHFCg.sTI60tL_bHvFfO-ksa0biM8-rms");
+client.login(config.clientLogin);
 var apikey = config.apikey;
 
 const charImage = "http://render-us.worldofwarcraft.com/character/";
@@ -19,29 +19,6 @@ client.on("message", message =>
   var input = message.content.toUpperCase();
   var words = message.content.split(' ');
   var user = message.author.name;
-
-  if(input == "!ADDONS")
-  {
-    message.channel.send({embed: {
-      fields: [{
-        name: "ADDONS",
-        value: "---",
-      },
-      {
-        name: "Basically required:",
-        value: "DBM, Garrison Mission Manager, Details!",
-      },
-      {
-        name: "Quality of life:",
-        value: "Leatrix Plus, Auctionator, BuyEmAll, DialogKey, SellJunk, Handy Notes",
-      },
-      {
-        name: "UI Customisation:",
-        value: "Bartender, Weak Auras, Bagnon",
-      }
-    ],
-    }});
-  }
 
   if(input.startsWith("!CHAR"))
   {
@@ -93,7 +70,7 @@ client.on("message", message =>
           };
         });
       } else {
-        message.channel.send('Please submit a character name (!char *name*)');
+        message.channel.send('Please submit a character name (!char *name* *realm*)');
       }
     }
   )};
@@ -106,6 +83,7 @@ client.on("message", message =>
           if(info.status == "nok"){
             message.channel.send("Error retrieving data");
           } else {
+            message.delete();
             message.channel.send({embed: {
               fields: [{
                 name: info.affix_details[0].name,
@@ -128,18 +106,25 @@ client.on("message", message =>
 
   if(input === "!STATUS")
   {
-    getRealmStatus(function(info) {
+    var realm = words[1];
+    var region = words[2];
+    getRealmStatus(realm, region, function(info) {
       if(info.status == "nok"){
         message.channel.send("Error retrieving realm status");
       } else {
-        if (info.realms[1].status = true)
+        if (info.realms[0].status = true)
         {
-          message.channel.send('Caelestrasz is **UP**' );
+          message.channel.send(`'${realm} is **UP**'` );
         } else {
-          message.channel.send('Caelestrasz is **DOWN**' );
+          message.channel.send(`'${realm} is **DOWN**'` );
         }
       };
     });
+  }
+
+  if(input === "!help")
+  {
+    message.channel.send('!char character-name server-name');
   }
 });
 
@@ -157,8 +142,8 @@ function getCharData(charName, region, callback)  {
   });
 }
 
-function getRealmStatus(callback)  {
-  request(`https://us.api.battle.net/wow/realm/status?realms=caelestrasz,barthilas&locale=en_US&apikey=${apikey}`, function (error, response, result) {
+function getRealmStatus(realm, region, callback)  {
+  request(`https://${region}.api.battle.net/wow/realm/status?realms=${realm}&locale=en_${region}&apikey=${apikey}`, function (error, response, result) {
     if (!error && response.statusCode == 200) {
       var info = JSON.parse(result);
       callback(info);

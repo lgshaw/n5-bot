@@ -89,10 +89,15 @@ client.on("message", message =>
             message.channel.send("Error retrieving data");
           } else {
             message.delete();
+            weeklyBest = if(info.mythic_plus_weekly_highest_level_runs[0].dungeon){
+              weeklyBest = `${info.mythic_plus_weekly_highest_level_runs[0].dungeon} +${info.mythic_plus_weekly_highest_level_runs[0].mythic_level}`
+            } else {
+              weeklyBest = "No keys done. Get your shit happening!"
+            };
             message.channel.send({embed: {
               fields: [{
-                name: "Highest M+ completed for the current week:",
-                value: `${info.mythic_plus_weekly_highest_level_runs[0].dungeon} +${info.mythic_plus_weekly_highest_level_runs[0].mythic_level}`,
+                name: `${info.name}'s highest M+ completed for this week:`,
+                value: `${weeklyBest}`,
               },
             ],
           }});

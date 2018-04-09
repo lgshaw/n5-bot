@@ -89,7 +89,8 @@ client.on("message", message =>
             message.channel.send("Error retrieving data");
           } else {
             message.delete();
-            weeklyBest = if(info.mythic_plus_weekly_highest_level_runs[0].dungeon){
+            var weeklyBest;
+            if(info.mythic_plus_weekly_highest_level_runs[0].dungeon){
               weeklyBest = `${info.mythic_plus_weekly_highest_level_runs[0].dungeon} +${info.mythic_plus_weekly_highest_level_runs[0].mythic_level}`
             } else {
               weeklyBest = "No keys done. Get your shit happening!"

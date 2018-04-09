@@ -55,7 +55,7 @@ client.on("message", message =>
               },
               {
                 name: "Legion Progression:",
-                value: `**EN:** ${raidProgressCheck(info.progression.raids[35])}, **ToV:** ${raidProgressCheck(info.progression.raids[36])}, **NH:** ${raidProgressCheck(info.progression.raids[37])}, **ToS:** ${raidProgressCheck(info.progression.raids[38])}`,
+                value: `**EN:** ${raidProgressCheck(info.progression.raids[35])}, **ToV:** ${raidProgressCheck(info.progression.raids[36])}, **NH:** ${raidProgressCheck(info.progression.raids[37])}, **ToS:** ${raidProgressCheck(info.progression.raids[38])}, **Antorus:** ${raidProgressCheck(info.progression.raids[39])}`,
               },
               {
                 name: "Mythic+ dungeons completed:",

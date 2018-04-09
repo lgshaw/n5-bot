@@ -26,7 +26,8 @@ client.on("message", message =>
 
   if(input.startsWith("!CHAR"))
   {
-    message.channel.send("Fetching data...")
+    //message.channel.send("Fetching data...")
+    message.channel.startTyping()
     .then(message => {
       var charName = words[1];
       var region = words[2];
@@ -37,7 +38,7 @@ client.on("message", message =>
           if(info.status == "nok"){
             message.channel.send("Character not found - try again");
           } else {
-            message.delete();
+            //message.delete();
             imgURL = charImage + info.thumbnail;
             console.log(`${info.name}\n${imgURL}`);
             playerTitles = info.titles;
@@ -72,6 +73,7 @@ client.on("message", message =>
             ],
           }});
           };
+          message.channel.stopTyping();
         });
       } else {
         message.channel.send('Please submit a character name (!char *name* *realm*)');

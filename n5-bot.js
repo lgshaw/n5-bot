@@ -75,6 +75,35 @@ client.on("message", message =>
     }
   )};
 
+  if(input.startsWith("!WEEKLY"))
+  {
+    message.channel.send("Fetching data...")
+    .then(message => {
+      var charName = words[1];
+      var realm = words[2];
+      if (!words[2])
+      { realm = "caelestrasz" };
+      if (charName) {
+        getWeeklyMythicPlus(charName, realm, function(info) {
+          if(info.status == "nok"){
+            message.channel.send("Error retrieving data");
+          } else {
+            message.delete();
+            message.channel.send({embed: {
+              fields: [{
+                name: "Highest M+ completed for the current week:",
+                value: `${info.mythic_plus_weekly_highest_level_runs[0].dungeon} +${info.mythic_plus_weekly_highest_level_runs[0].mythic_level}`,
+              },
+            ],
+          }});
+          };
+        });
+      } else {
+        message.channel.send('Please submit a character name (!weekly *name* *realm*)');
+      }
+    }
+  )};
+
   if(input.startsWith("!AFFIXES"))
   {
     message.channel.send("Fetching data...")
@@ -156,6 +185,18 @@ function getRealmStatus(realm, region, callback)  {
 
 function getMythicPlusAffixes(region, callback) {
   request(`https://raider.io/api/v1/mythic-plus/affixes?region=${region}`, function (error, response, result) {
+    if (!error && response.statusCode == 200) {
+      var info = JSON.parse(result);
+      callback(info);
+    } else {
+      var info = JSON.parse(result);
+      callback(info);
+    };
+  });
+}
+
+function getWeeklyMythicPlus(charName, realm, callback) {
+  request(`https://raider.io/api/v1/characters/profile?region=us&realm=${realm}&name=${charName}&fields=mythic_plus_weekly_highest_level_runs`, function (error, response, result) {
     if (!error && response.statusCode == 200) {
       var info = JSON.parse(result);
       callback(info);

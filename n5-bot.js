@@ -19,6 +19,10 @@ client.on("message", message =>
   var input = message.content.toUpperCase();
   var words = message.content.split(' ');
   var user = message.author.name;
+  if(input.startsWith("!PIRATE"))
+  {
+    message.channel.send("YARRRRRRGH!")
+  };
 
   if(input.startsWith("!CHAR"))
   {
@@ -90,7 +94,7 @@ client.on("message", message =>
           } else {
             message.delete();
             var weeklyBest;
-            if(info.mythic_plus_weekly_highest_level_runs[0].dungeon){
+            if(info.mythic_plus_weekly_highest_level_runs[0]){
               weeklyBest = `${info.mythic_plus_weekly_highest_level_runs[0].dungeon} +${info.mythic_plus_weekly_highest_level_runs[0].mythic_level}`
             } else {
               weeklyBest = "No keys done. Get your shit happening!"

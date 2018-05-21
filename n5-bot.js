@@ -156,7 +156,7 @@ client.on("message", message =>
             message.channel.send({embed: {
               fields: [{
                 name: "Current Token Price",
-                value: info.price,
+                value: format((info.price / 10000)),
               },
             ],
           }});
@@ -333,6 +333,10 @@ function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+}
+
+function format(x) {
+  return isNaN(x)?"":x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 console.log("Beep boop - bot running!");

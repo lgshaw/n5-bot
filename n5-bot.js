@@ -9,7 +9,8 @@ var client = new Discord.Client();
 var wow = bnet.wow;
 
 client.login(config.clientLogin);
-var apikey = config.apikey;
+var apiKey = config.apiKey;
+var apiToken = config.apiToken;
 
 const charImage = "http://render-us.worldofwarcraft.com/character/";
 const sumValues = obj => Object.values(obj).reduce((a, b) => a + b);
@@ -143,6 +144,27 @@ client.on("message", message =>
       });
     }
 
+    if(input.startsWith("!TOKEN"))
+  {
+    message.channel.send("Fetching data...")
+    .then(message => {
+        getWoWTokenPrice('us', function(info) {
+          if(info.status == "nok"){
+            message.channel.send("Error retrieving data");
+          } else {
+            message.delete();
+            message.channel.send({embed: {
+              fields: [{
+                name: "Current Token Price",
+                value: info.price,
+              },
+            ],
+          }});
+          };
+        });
+      });
+    }
+
   if(input === "!STATUS")
   {
     var realm = words[1];
@@ -170,7 +192,7 @@ client.on("message", message =>
 
 
 function getCharData(charName, region, callback)  {
-  request(`https://us.api.battle.net/wow/character/${region}/${charName}?fields=items,titles,talents,progression,achievements,statistics&locale=en_US&apikey=${apikey}`, function (error, response, result) {
+  request(`https://us.api.battle.net/wow/character/${region}/${charName}?fields=items,titles,talents,progression,achievements,statistics&locale=en_US&apikey=${apiKey}`, function (error, response, result) {
     if (!error && response.statusCode == 200) {
       var info = JSON.parse(result);
       callback(info);
@@ -182,7 +204,7 @@ function getCharData(charName, region, callback)  {
 }
 
 function getRealmStatus(realm, region, callback)  {
-  request(`https://${region}.api.battle.net/wow/realm/status?realms=${realm}&locale=en_${region}&apikey=${apikey}`, function (error, response, result) {
+  request(`https://${region}.api.battle.net/wow/realm/status?realms=${realm}&locale=en_${region}&apikey=${apiKey}`, function (error, response, result) {
     if (!error && response.statusCode == 200) {
       var info = JSON.parse(result);
       callback(info);
@@ -205,8 +227,8 @@ function getMythicPlusAffixes(region, callback) {
   });
 }
 
-function getWeeklyMythicPlus(charName, realm, callback) {
-  request(`https://raider.io/api/v1/characters/profile?region=us&realm=${realm}&name=${charName}&fields=mythic_plus_weekly_highest_level_runs`, function (error, response, result) {
+function getWoWTokenPrice(region, callback)  {
+  request(`https://us.api.battle.net/data/wow/token/?namespace=dynamic-us&locale=en_US&access_token=${apiToken}`, function (error, response, result) {
     if (!error && response.statusCode == 200) {
       var info = JSON.parse(result);
       callback(info);

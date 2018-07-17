@@ -57,11 +57,15 @@ client.on("message", message =>
               },
               fields: [{
                 name: `${info.level} ${info.talents[0].spec.name} ${classLookup[info.class].name}`,
-                value: `${info.items.averageItemLevel} iLvl - Artifact Rank: ${artifactWeapon(info)}`,
+                value: `${info.items.averageItemLevel} iLvl - Artifact Rank: ${artifactWeapon(info)} - Achievement Pts: ${info.achievementPoints}`,
+              },
+              {
+                name: "Stats:",
+                value: `Crit: ${info.stats.crit}% (${info.stats.critRating}), Haste: ${info.stats.haste}% (${info.stats.hasteRating}), Vers: ${info.stats.versatility}% (${info.stats.versatilityRating}), Mastery: ${info.stats.mastery}% (${info.stats.masteryRating}),`,
               },
               {
                 name: "Legion Progression:",
-                value: `**EN:** ${raidProgressCheck(info.progression.raids[35])}, **ToV:** ${raidProgressCheck(info.progression.raids[36])}, **NH:** ${raidProgressCheck(info.progression.raids[37])}, **ToS:** ${raidProgressCheck(info.progression.raids[38])}, **Antorus:** ${raidProgressCheck(info.progression.raids[39])}`,
+                value: `**EN:** ${raidProgressCheck(info.progression.raids[35])}, **ToV:** ${raidProgressCheck(info.progression.raids[36])}, **NH:** ${raidProgressCheck(info.progression.raids[37])}, **ToS:** ${raidProgressCheck(info.progression.raids[38])}, **ABT:** ${raidProgressCheck(info.progression.raids[39])}`,
               },
               {
                 name: "Mythic+ dungeons completed:",
@@ -193,7 +197,7 @@ client.on("message", message =>
 
 
 function getCharData(charName, region, callback)  {
-  request(`https://us.api.battle.net/wow/character/${region}/${charName}?fields=items,titles,talents,progression,achievements,statistics&locale=en_US&apikey=${apiKey}`, function (error, response, result) {
+  request(`https://us.api.battle.net/wow/character/${region}/${charName}?fields=items,titles,talents,progression,achievements,stats,statistics&locale=en_US&apikey=${apiKey}`, function (error, response, result) {
     if (!error && response.statusCode == 200) {
       var info = JSON.parse(result);
       callback(info);

@@ -57,11 +57,11 @@ client.on("message", message =>
               },
               fields: [{
                 name: `${info.level} ${info.talents[0].spec.name} ${classLookup[info.class].name}`,
-                value: `${info.items.averageItemLevel} iLvl - Artifact Rank: ${artifactWeapon(info)} - Achievement Pts: ${info.achievementPoints}`,
+                value: `${info.items.averageItemLevel} iLvl - Artifact Rank: ${artifactWeapon(info)} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
               },
               {
                 name: "Stats:",
-                value: `Crit: ${info.stats.crit}% (${info.stats.critRating}), Haste: ${info.stats.haste}% (${info.stats.hasteRating}), Vers: ${info.stats.versatility}% (${info.stats.versatilityRating}), Mastery: ${info.stats.mastery}% (${info.stats.masteryRating}),`,
+                value: `**Crit:** ${info.stats.crit}% (${info.stats.critRating}), **Haste:** ${info.stats.haste.toFixed(2)}% (${info.stats.hasteRating}), **Vers:** ${info.stats.versatilityDamageDoneBonus}% (${info.stats.versatility}), **Mastery:** ${info.stats.mastery}% (${info.stats.masteryRating}),`,
               },
               {
                 name: "Legion Progression:",

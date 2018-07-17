@@ -61,7 +61,7 @@ client.on("message", message =>
               },
               {
                 name: "Stats:",
-                value: `**Crit:** ${info.stats.crit.toFixed(2)}% (${info.stats.critRating}), **Haste:** ${info.stats.haste.toFixed(2)}% (${info.stats.hasteRating}), **Vers:** ${info.stats.versatilityDamageDoneBonus.toFixed(2)}% (${info.stats.versatility}), **Mastery:** ${info.stats.mastery.toFixed(2)}% (${info.stats.masteryRating}),`,
+                value: `**Crit:** ${info.stats.crit.toFixed(2)}% (${info.stats.critRating}) \n**Haste:** ${info.stats.haste.toFixed(2)}% (${info.stats.hasteRating}) \n**Vers:** ${info.stats.versatilityDamageDoneBonus.toFixed(2)}% (${info.stats.versatility}) \n**Mastery:** ${info.stats.mastery.toFixed(2)}% (${info.stats.masteryRating}),`,
               },
               {
                 name: "Legion Progression:",

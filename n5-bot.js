@@ -11,6 +11,7 @@ var wow = bnet.wow;
 client.login(config.clientLogin);
 var apiKey = config.apiKey;
 var apiToken = config.apiToken;
+var priceTokenToken = config.priceTokenToken;
 
 const charImage = "http://render-us.worldofwarcraft.com/character/";
 const sumValues = obj => Object.values(obj).reduce((a, b) => a + b);
@@ -228,7 +229,7 @@ function getMythicPlusAffixes(region, callback) {
 }
 
 function getWoWTokenPrice(region, callback)  {
-  request(`https://us.api.battle.net/data/wow/token/?namespace=dynamic-us&locale=en_US&access_token=${apiToken}`, function (error, response, result) {
+  request(`https://us.api.battle.net/data/wow/token/?namespace=dynamic-us&locale=en_US&access_token=${priceTokenToken}`, function (error, response, result) {
     if (!error && response.statusCode == 200) {
       var info = JSON.parse(result);
       callback(info);

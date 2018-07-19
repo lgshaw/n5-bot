@@ -293,7 +293,7 @@ function mythicPlusCheck(data, criteriaID){
 };
 
 function checkHonorLevel(data){
-    var checkThese = Object.key(honorRanks).sort(((b, a) => b - a));
+    var checkThese = Object.keys(honorRanks).sort(((b, a) => b - a));
     console.log(checkThese);
     return data.checkThese[0];
 };

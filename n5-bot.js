@@ -2,6 +2,7 @@ var Discord = require("discord.js");
 var bnet = require("battlenet-api")('qnehqjeq658chy2ak9qqkp7q4ft9gmu4');
 var request = require('request');
 
+var honorRanks = require('./honorRanks.js');
 var classLookup = require('./classLookup.js');
 var config = require('./config.js');
 
@@ -57,7 +58,7 @@ client.on("message", message =>
               },
               fields: [{
                 name: `${info.level} ${info.talents[0].spec.name} ${classLookup[info.class].name}`,
-                value: `${info.items.averageItemLevel} iLvl - Artifact Rank: ${artifactWeapon(info)} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                value: `${info.items.averageItemLevel} iLvl - Honor Level: ${checkHonorLevel(info.achievements.achievementsCompleted)} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
               },
               {
                 name: "Stats:",
@@ -277,6 +278,7 @@ function raidProgressCheck(data) {
   };
 };
 
+
 function mythicPlusCheck(data, criteriaID){
   // var achieves = [11183,11184,11185,11162];
   var criteriaList = data.achievements.criteria;
@@ -290,6 +292,12 @@ function mythicPlusCheck(data, criteriaID){
   }
 };
 
+function checkHonorLevel(data){
+    var checkThese = Object.key(honorRanks).sort(((b, a) => b - a));
+    console.log(checkThese);
+    return data.checkThese[0];
+};
+
 function checkTitleExists(player, data) {
   if (searchObj(data,'selected', true).length > 0) {
     var activePlayerTitle = searchObj(playerTitles,'selected', true)[0].name.replace(/(%s)/g, player);
@@ -299,25 +307,25 @@ function checkTitleExists(player, data) {
   };
 };
 
-function artifactWeapon(info) {
-  var weapon = 'mainHand';
-  if (info.items.mainHand.artifactTraits.length < 1) {
-    weapon = 'offHand';
-    if (!info.items.offHand || info.items.offHand.artifactTraits.length < 1) {
-    weapon = false;
-    }
-  };
-  console.log(weapon);
-  if(weapon){
-    var result = (sumValues(info.items[weapon].artifactTraits.map(function(a) { return a.rank;})))-3;
-  } else {
-    result = 0;
-  };
-  if (result < 0) {
-    result = 0;
-  }
-  return result;
-};
+// function artifactWeapon(info) {
+//   var weapon = 'mainHand';
+//   if (info.items.mainHand.artifactTraits.length < 1) {
+//     weapon = 'offHand';
+//     if (!info.items.offHand || info.items.offHand.artifactTraits.length < 1) {
+//     weapon = false;
+//     }
+//   };
+//   console.log(weapon);
+//   if(weapon){
+//     var result = (sumValues(info.items[weapon].artifactTraits.map(function(a) { return a.rank;})))-3;
+//   } else {
+//     result = 0;
+//   };
+//   if (result < 0) {
+//     result = 0;
+//   }
+//   return result;
+// };
 
 function funFactCheck(data) {
   var stat;

@@ -58,7 +58,7 @@ client.on("message", message =>
               },
               fields: [{
                 name: `${info.level} ${info.talents[0].spec.name} ${classLookup[info.class].name}`,
-                value: `${info.items.averageItemLevel} iLvl - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                value: `${info.items.averageItemLevel} iLvl - ${checkHonorLevel(info.achievements.achievementsCompleted)} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
               },
               {
                 name: "Stats:",
@@ -292,10 +292,30 @@ function mythicPlusCheck(data, criteriaID){
   }
 };
 
+function fetchAchievementInfo(id, callback)  {
+  request(`https://us.api.battle.net/wow/achievement/${id}?locale=en_US&apikey=${apiKey}`, function (error, response, result) {
+    if (!error && response.statusCode == 200) {
+      var info = JSON.parse(result);
+      callback(info);
+    } else {
+      var info = JSON.parse(result);
+      callback(info);
+    };
+  });
+}
+
 function checkHonorLevel(data){
-    var checkThese = Object.keys(honorRanks).sort(((b, a) => b - a));
-    console.log(checkThese);
-    return data.checkThese[0];
+  var completedRankAchieves = [];
+
+  honorRanks.sort(((a, b) => b - a)).forEach(function (item) {
+   if(data.includes(parseInt(item))){
+    completedRankAchieves.push(item);
+   }
+  });
+
+  fetchAchievementInfo(completedRankAchieves[0], function(info) {
+    console.log(info.title);
+  });
 };
 
 function checkTitleExists(player, data) {

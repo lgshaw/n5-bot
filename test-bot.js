@@ -24,23 +24,34 @@ function getCharData(charName, region, callback)  {
     });
   }
 
-  function format(x) {
-    return isNaN(x)?"":x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  }
-  var sortArray = Object.keys(honorRanks).sort(((b, a) => b - a));
-  
-  function checkHonorLevel(data){
-    sortArray.forEach(function (item) {
-     console.log(`${data.includes(item)} : ${item}`);
+  function fetchAchievementInfo(id, callback)  {
+    request(`https://us.api.battle.net/wow/achievement/${id}?locale=en_US&apikey=${apiKey}`, function (error, response, result) {
+      if (!error && response.statusCode == 200) {
+        var info = JSON.parse(result);
+        callback(info);
+      } else {
+        var info = JSON.parse(result);
+        callback(info);
+      };
     });
-    console.log(data.includes(12893));
-    // //console.log(checkThese[checkThese.length - 1]);
-    // //console.log(data.hasOwnProperty(checkThese.length - 1));
-    //console.log(data.hasOwnProperty('12893'));
+  }
+
+  function checkHonorLevel(data){
+    var completedRankAchieves = [];
+
+    honorRanks.sort(((a, b) => b - a)).forEach(function (item) {
+     if(data.includes(parseInt(item))){
+      completedRankAchieves.push(item);
+     }
+    });
+
+    fetchAchievementInfo(completedRankAchieves[0], function(info) {
+      console.log(info.title);
+    });
 };
 
 
-  getCharData('Shaweaver', 'caelestrasz', function(info){
+  getCharData('Holymini', 'caelestrasz', function(info){
       checkHonorLevel(info.achievements.achievementsCompleted);
   });
 

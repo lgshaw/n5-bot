@@ -36,21 +36,23 @@ function getCharData(charName, region, callback)  {
     });
   }
 
-  function checkHonorLevel(data){
-    var completedRankAchieves = [];
+  const checkHonorLevel = data => {
 
-    honorRanks.sort(((a, b) => b - a)).forEach(function (item) {
-     if(data.includes(parseInt(item))){
-      completedRankAchieves.push(item);
-     }
+    let completedRankAchieves = honorRanks.sort(((a, b) => b - a)).filter(item => 
+      data.includes(parseInt(item)) ? parseInt(item) : false
+    );
+    let blah = fetchAchievementInfo(completedRankAchieves[0], info => {
+      console.log(info.title);
+      return info.title;
     });
+    console.log(blah);
+    return completedRankAchieves[0];
+    
 
-    fetchAchievementInfo(completedRankAchieves[0], function(info) {
-      return (info.title);
-    });
 };
 
 
   getCharData('Shaweaver', 'caelestrasz', function(info){
-      checkHonorLevel(info.achievements.achievementsCompleted);
+      console.log(`result ${checkHonorLevel(info.achievements.achievementsCompleted)}`);
+
   });

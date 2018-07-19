@@ -46,12 +46,11 @@ function getCharData(charName, region, callback)  {
     });
 
     fetchAchievementInfo(completedRankAchieves[0], function(info) {
-      console.log(info.title);
+      return (info.title);
     });
 };
 
 
-  getCharData('Holymini', 'caelestrasz', function(info){
+  getCharData('Shaweaver', 'caelestrasz', function(info){
       checkHonorLevel(info.achievements.achievementsCompleted);
   });
-

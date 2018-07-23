@@ -24,14 +24,14 @@ function getCharData(charName, region, callback)  {
     });
   }
 
-  function fetchAchievementInfo(id, callback)  {
+  const fetchAchievementInfo = (id, callback) =>  {
     request(`https://us.api.battle.net/wow/achievement/${id}?locale=en_US&apikey=${apiKey}`, function (error, response, result) {
       if (!error && response.statusCode == 200) {
-        var info = JSON.parse(result);
-        callback(info);
+        var data = JSON.parse(result);
+        callback(data);
       } else {
-        var info = JSON.parse(result);
-        callback(info);
+        var data = JSON.parse(result);
+        callback(data);
       };
     });
   }
@@ -41,18 +41,26 @@ function getCharData(charName, region, callback)  {
     let completedRankAchieves = honorRanks.sort(((a, b) => b - a)).filter(item => 
       data.includes(parseInt(item)) ? parseInt(item) : false
     );
-    let blah = fetchAchievementInfo(completedRankAchieves[0], info => {
-      console.log(info.title);
-      return info.title;
-    });
-    console.log(blah);
-    return completedRankAchieves[0];
-    
+    // return completedRankAchieves[0];
 
-};
+    fetchAchievementInfo(completedRankAchieves[0], function(info) {
+      return(info.title);
+    });
+  };
 
 
   getCharData('Shaweaver', 'caelestrasz', function(info){
-      console.log(`result ${checkHonorLevel(info.achievements.achievementsCompleted)}`);
+    
+  checkHonorLevel(info.achievements.achievementsCompleted);
+//  console.log(info.achievements.achievementsCompleted);
+  //   checkHonorLevel(info.achievements.achievementsCompleted)
+  //     .then(function(response) {
+  //       console.log(response);
+  //       fetchAchievementInfo(response);
+  //     })
+  //     .then(function(response){
+  //       console.log(response);
+  //     });
+   });
 
-  });
+

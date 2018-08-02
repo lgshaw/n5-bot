@@ -58,7 +58,7 @@ client.on("message", message =>
               },
               fields: [{
                 name: `${info.level} ${info.talents[0].spec.name} ${classLookup[info.class].name}`,
-                value: `${info.items.averageItemLevel} iLvl - ${checkHonorLevel(info.achievements.achievementsCompleted)} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                value: `${info.items.averageItemLevel} iLvl - ${fetchAchievementInfo(checkHonorLevel(info.achievements.achievementsCompleted), function (data) {return data.title;})} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
               },
               {
                 name: "Stats:",
@@ -305,15 +305,11 @@ const fetchAchievementInfo = (id, callback) =>  {
 }
 
 const checkHonorLevel = data => {
-
   let completedRankAchieves = honorRanks.sort(((a, b) => b - a)).filter(item => 
     data.includes(parseInt(item)) ? parseInt(item) : false
   );
-  // return completedRankAchieves[0];
-
-  fetchAchievementInfo(completedRankAchieves[0], function(info) {
-    return(info.title);
-  });
+  console.log(completedRankAchieves[0]);
+  return completedRankAchieves[0];   
 };
 
 function checkTitleExists(player, data) {

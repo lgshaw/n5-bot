@@ -275,10 +275,7 @@ const getHonorRank = data => {
     achieves.includes(parseInt(item)) ? parseInt(item) : false
   );
   
-  fetchAchievementInfo(filteredRanks[0]).then(result => {
-    console.log(result.title);
-    return result.title;
-  });
+  return fetchAchievementInfo(filteredRanks[0]).then(result => result.title);
 };
 
 function checkTitleExists(player, data) {

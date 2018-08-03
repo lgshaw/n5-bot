@@ -1,6 +1,7 @@
 var Discord = require("discord.js");
 var bnet = require("battlenet-api")('qnehqjeq658chy2ak9qqkp7q4ft9gmu4');
 var request = require('request');
+var axios = require('axios');
 
 var honorRanks = require('./honorRanks.js');
 var classLookup = require('./classLookup.js');
@@ -58,7 +59,7 @@ client.on("message", message =>
               },
               fields: [{
                 name: `${info.level} ${info.talents[0].spec.name} ${classLookup[info.class].name}`,
-                value: `${info.items.averageItemLevel} iLvl - ${fetchAchievementInfo(checkHonorLevel(info.achievements.achievementsCompleted), function (data) {return data.title;})} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                value: `${info.items.averageItemLevel} iLvl - ${checkHonorLevel(info.achievements.achievementsCompleted), function (data) {return data.title;})} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
               },
               {
                 name: "Stats:",
@@ -197,16 +198,15 @@ client.on("message", message =>
 
 
 
-function getCharData(charName, region, callback)  {
-  request(`https://us.api.battle.net/wow/character/${region}/${charName}?fields=items,titles,talents,progression,achievements,stats,statistics&locale=en_US&apikey=${apiKey}`, function (error, response, result) {
-    if (!error && response.statusCode == 200) {
-      var info = JSON.parse(result);
-      callback(info);
-    } else {
-      var info = JSON.parse(result);
-      callback(info);
-    };
-  });
+const getCharData = (charName, region, callback) =>  {
+  axios(`https://us.api.battle.net/wow/character/${region}/${charName}?fields=items,titles,talents,progression,achievements,stats,statistics&locale=en_US&apikey=${apiKey}`)
+    .then(response => {
+      console.log('got data!');
+      callback(response.data);
+    })
+    .catch(error => {
+      console.log(error);
+    });
 }
 
 function getRealmStatus(realm, region, callback)  {
@@ -292,24 +292,23 @@ function mythicPlusCheck(data, criteriaID){
   }
 };
 
-const fetchAchievementInfo = (id, callback) =>  {
-  request(`https://us.api.battle.net/wow/achievement/${id}?locale=en_US&apikey=${apiKey}`, function (error, response, result) {
-    if (!error && response.statusCode == 200) {
-      var data = JSON.parse(result);
-      callback(data);
-    } else {
-      var data = JSON.parse(result);
-      callback(data);
-    };
-  });
-}
+const fetchAchievementInfo = (id, callback) => {
+  log('getting Achievement data...')
+  axios.get(`https://us.api.battle.net/wow/achievement/${id}?locale=en_US&apikey=${apiKey}`)
+    .then(response => {
+      console.log('got data!');
+      callback(response.data);
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
 
-const checkHonorLevel = data => {
+const checkHonorLevel = ( data ) => {
   let completedRankAchieves = honorRanks.sort(((a, b) => b - a)).filter(item => 
     data.includes(parseInt(item)) ? parseInt(item) : false
-  );
-  console.log(completedRankAchieves[0]);
-  return completedRankAchieves[0];   
+  )
+  fetchAchievementInfo(completedRankAchieves[0], response => response.title);  
 };
 
 function checkTitleExists(player, data) {

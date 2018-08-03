@@ -4,6 +4,7 @@
   "description": "",
   "main": "n5-bot.js",
   "dependencies": {
+    "axios": "^0.18.0",
     "battlenet-api": "^0.13.0",
     "discord.js": "^11.1.0",
     "jquery": "^3.1.0",

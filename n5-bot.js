@@ -365,4 +365,8 @@ function format(x) {
   return isNaN(x)?"":x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+const log = data => {
+  console.log(data);
+}
+
 console.log("Beep boop - bot running!");

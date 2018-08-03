@@ -40,15 +40,17 @@ const fetchAchievementInfo = id => {
     });
 };
 
-const checkHonorLevel = data  => {
-  let filterRanks = honorRanks.sort(((a, b) => b - a)).filter(item => 
+const checkHonorAchieves = data  => {
+  let filteredRanks = honorRanks.sort(((a, b) => b - a)).filter(item => 
     data.includes(parseInt(item)) ? parseInt(item) : false
   );
   
-  return filterRanks[0];
+  return filteredRanks[0];
 };
 
-const getHonor = () 
+const getHonorRank = (info) => {
+  fetchAchievementInfo(checkHonorAchieves(info.achievements.achievementsCompleted), response => response.title);
+}
 getCharData('Shaweaver', 'caelestrasz', info => {
-  getHonor();
+  getHonorRank(info);
 });

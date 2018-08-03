@@ -276,7 +276,8 @@ const getHonorRank = data => {
   );
   
   fetchAchievementInfo(filteredRanks[0]).then(result => {
-    return result.title
+    console.log(result.title);
+    return result.title;
   });
 };
 

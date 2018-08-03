@@ -87,41 +87,6 @@ client.on("message", message =>
     }
   )};
 
-  if(input.startsWith("!WEEKLY"))
-  {
-    message.channel.send("Fetching data...")
-    .then(message => {
-      var charName = words[1];
-      var realm = words[2];
-      if (!words[2])
-      { realm = "caelestrasz" };
-      if (charName) {
-        getWeeklyMythicPlus(charName, realm, function(info) {
-          if(info.status == "nok"){
-            message.channel.send("Error retrieving data");
-          } else {
-            message.delete();
-            var weeklyBest;
-            if(info.mythic_plus_weekly_highest_level_runs[0]){
-              weeklyBest = `${info.mythic_plus_weekly_highest_level_runs[0].dungeon} +${info.mythic_plus_weekly_highest_level_runs[0].mythic_level}`
-            } else {
-              weeklyBest = "No keys done. Get your shit happening!"
-            };
-            message.channel.send({embed: {
-              fields: [{
-                name: `${info.name}'s highest M+ completed for this week:`,
-                value: `${weeklyBest}`,
-              },
-            ],
-          }});
-          };
-        });
-      } else {
-        message.channel.send('Please submit a character name (!weekly *name* *realm*)');
-      }
-    }
-  )};
-
   if(input.startsWith("!AFFIXES"))
   {
     message.channel.send("Fetching data...")
@@ -304,16 +269,13 @@ const fetchAchievementInfo = id => {
     });
 };
 
-const checkHonorAchieves = data  => {
+const getHonorRank = data => {
+  let achieves = data.achievements.achievementsCompleted;
   let filteredRanks = honorRanks.sort(((a, b) => b - a)).filter(item => 
-    data.includes(parseInt(item)) ? parseInt(item) : false
+    achieves.includes(parseInt(item)) ? parseInt(item) : false
   );
   
-  return filteredRanks[0];
-};
-
-const getHonorRank = (info) => {
-  fetchAchievementInfo(checkHonorAchieves(info.achievements.achievementsCompleted), response => response.title);
+  return fetchAchievementInfo(filteredRanks[0].title);
 };
 
 function checkTitleExists(player, data) {

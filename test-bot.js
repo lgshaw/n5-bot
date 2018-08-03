@@ -28,12 +28,12 @@ const log = data => {
   console.log(data);
 };
 
-const fetchAchievementInfo = (id, callback) => {
+const fetchAchievementInfo = id => {
   log(`getting Achievement data for: ${id}`)
-  axios.get(`https://us.api.battle.net/wow/achievement/${id}?locale=en_US&apikey=${apiKey}`)
+  return axios.get(`https://us.api.battle.net/wow/achievement/${id}?locale=en_US&apikey=${apiKey}`)
     .then(response => {
       console.log('got data!');
-      callback(response.data);
+      return response.data;
     })
     .catch(error => {
       console.log(error);
@@ -48,8 +48,7 @@ const checkHonorLevel = data  => {
   return filterRanks[0];
 };
 
+const getHonor = () 
 getCharData('Shaweaver', 'caelestrasz', info => {
-  fetchAchievementInfo(checkHonorLevel(info.achievements.achievementsCompleted), response => {
-    log(response.title);
-  });
+  getHonor();
 });

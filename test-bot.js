@@ -46,9 +46,9 @@ const getHonorRank = data => {
     achieves.includes(parseInt(item)) ? parseInt(item) : false
   );
   
-  return fetchAchievementInfo(filteredRanks[0]).then(result => result.title);
+  return fetchAchievementInfo(filteredRanks[0]);
 };
 
 getCharData('Shaweaver', 'caelestrasz', info => {
-  getHonorRank(info);
+  getHonorRank(info).then(res => res);
 });

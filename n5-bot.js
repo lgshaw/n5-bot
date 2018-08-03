@@ -59,7 +59,7 @@ client.on("message", message =>
               },
               fields: [{
                 name: `${info.level} ${info.talents[0].spec.name} ${classLookup[info.class].name}`,
-                value: `${info.items.averageItemLevel} iLvl - ${getHonorRank(info)} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                value: `${info.items.averageItemLevel} iLvl - ${getHonorRank(info).then(res => res.title)} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
               },
               // {
               //   name: "Stats:",
@@ -275,7 +275,7 @@ const getHonorRank = data => {
     achieves.includes(parseInt(item)) ? parseInt(item) : false
   );
   
-  return fetchAchievementInfo(filteredRanks[0]).then(result => result.title);
+  return fetchAchievementInfo(filteredRanks[0]);
 };
 
 function checkTitleExists(player, data) {

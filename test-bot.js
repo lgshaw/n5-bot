@@ -40,18 +40,16 @@ const fetchAchievementInfo = (id, callback) => {
     });
 };
 
-const checkHonorLevel = data => {
-  let achieves = honorRanks.sort(((a, b) => b - a)).filter(item => 
+const checkHonorLevel = data  => {
+  let filterRanks = honorRanks.sort(((a, b) => b - a)).filter(item => 
     data.includes(parseInt(item)) ? parseInt(item) : false
   );
   
-  return new Promise((resolve) => {
-    fetchAchievementInfo(achieves[0], info => {
-      resolve(info.title);
-    })
-  })
+  return filterRanks[0];
 };
 
 getCharData('Shaweaver', 'caelestrasz', info => {
-  checkHonorLevel(info.achievements.achievementsCompleted);
+  fetchAchievementInfo(checkHonorLevel(info.achievements.achievementsCompleted), response => {
+    log(response.title);
+  });
 });

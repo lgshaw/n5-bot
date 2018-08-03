@@ -59,7 +59,7 @@ client.on("message", message =>
               },
               fields: [{
                 name: `${info.level} ${info.talents[0].spec.name} ${classLookup[info.class].name}`,
-                value: `${info.items.averageItemLevel} iLvl - ${checkHonorLevel(info.achievements.achievementsCompleted)} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                value: `${info.items.averageItemLevel} iLvl - ${getHonorRank(info)} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
               },
               // {
               //   name: "Stats:",
@@ -292,28 +292,28 @@ function mythicPlusCheck(data, criteriaID){
   }
 };
 
-const fetchAchievementInfo = (id, callback) => {
+const fetchAchievementInfo = id => {
   log(`getting Achievement data for: ${id}`)
-  axios.get(`https://us.api.battle.net/wow/achievement/${id}?locale=en_US&apikey=${apiKey}`)
+  return axios.get(`https://us.api.battle.net/wow/achievement/${id}?locale=en_US&apikey=${apiKey}`)
     .then(response => {
       console.log('got data!');
-      callback(response.data);
+      return response.data;
     })
     .catch(error => {
       console.log(error);
     });
 };
 
-const checkHonorLevel = data => {
-  let achieves = honorRanks.sort(((a, b) => b - a)).filter(item => 
+const checkHonorAchieves = data  => {
+  let filteredRanks = honorRanks.sort(((a, b) => b - a)).filter(item => 
     data.includes(parseInt(item)) ? parseInt(item) : false
   );
   
-  return new Promise((resolve) => {
-    fetchAchievementInfo(achieves[0], info => {
-      resolve(info.title);
-    })
-  })
+  return filteredRanks[0];
+};
+
+const getHonorRank = (info) => {
+  fetchAchievementInfo(checkHonorAchieves(info.achievements.achievementsCompleted), response => response.title);
 };
 
 function checkTitleExists(player, data) {

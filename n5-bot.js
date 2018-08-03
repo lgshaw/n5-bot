@@ -59,7 +59,7 @@ client.on("message", message =>
               },
               fields: [{
                 name: `${info.level} ${info.talents[0].spec.name} ${classLookup[info.class].name}`,
-                value: `${info.items.averageItemLevel} iLvl - ${checkHonorLevel(info.achievements.achievementsCompleted)}, function (data) {return data.title;})} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                value: `${info.items.averageItemLevel} iLvl - ${checkHonorLevel(info.achievements.achievementsCompleted).then(result => result)} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
               },
               {
                 name: "Stats:",
@@ -293,7 +293,7 @@ function mythicPlusCheck(data, criteriaID){
 };
 
 const fetchAchievementInfo = (id, callback) => {
-  log('getting Achievement data...')
+  log(`getting Achievement data for: ${id}`)
   axios.get(`https://us.api.battle.net/wow/achievement/${id}?locale=en_US&apikey=${apiKey}`)
     .then(response => {
       console.log('got data!');
@@ -304,11 +304,16 @@ const fetchAchievementInfo = (id, callback) => {
     });
 };
 
-const checkHonorLevel = ( data ) => {
-  let completedRankAchieves = honorRanks.sort(((a, b) => b - a)).filter(item => 
+const checkHonorLevel = data => {
+  let achieves = honorRanks.sort(((a, b) => b - a)).filter(item => 
     data.includes(parseInt(item)) ? parseInt(item) : false
-  )
-  fetchAchievementInfo(completedRankAchieves[0], response => response.title);  
+  );
+  
+  return new Promise((resolve) => {
+    fetchAchievementInfo(achieves[0], info => {
+      resolve(info.title);
+    })
+  })
 };
 
 function checkTitleExists(player, data) {
@@ -319,26 +324,6 @@ function checkTitleExists(player, data) {
     return player;
   };
 };
-
-// function artifactWeapon(info) {
-//   var weapon = 'mainHand';
-//   if (info.items.mainHand.artifactTraits.length < 1) {
-//     weapon = 'offHand';
-//     if (!info.items.offHand || info.items.offHand.artifactTraits.length < 1) {
-//     weapon = false;
-//     }
-//   };
-//   console.log(weapon);
-//   if(weapon){
-//     var result = (sumValues(info.items[weapon].artifactTraits.map(function(a) { return a.rank;})))-3;
-//   } else {
-//     result = 0;
-//   };
-//   if (result < 0) {
-//     result = 0;
-//   }
-//   return result;
-// };
 
 function funFactCheck(data) {
   var stat;

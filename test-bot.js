@@ -26,14 +26,10 @@ const getCharData = (charName, region, callback) => {
 
 const log = data => {
   console.log(data);
-}
-
-getCharData('Shaweaver', 'caelestrasz', response => {
-  checkHonorLevel(response.achievements.achievementsCompleted);
-});
+};
 
 const fetchAchievementInfo = (id, callback) => {
-  log('getting Achievement data...')
+  log(`getting Achievement data for: ${id}`)
   axios.get(`https://us.api.battle.net/wow/achievement/${id}?locale=en_US&apikey=${apiKey}`)
     .then(response => {
       console.log('got data!');
@@ -44,9 +40,18 @@ const fetchAchievementInfo = (id, callback) => {
     });
 };
 
-const checkHonorLevel = ( data ) => {
-  let completedRankAchieves = honorRanks.sort(((a, b) => b - a)).filter(item => 
+const checkHonorLevel = data => {
+  let achieves = honorRanks.sort(((a, b) => b - a)).filter(item => 
     data.includes(parseInt(item)) ? parseInt(item) : false
-  )
-  fetchAchievementInfo(completedRankAchieves[0], response => response.title);  
+  );
+  
+  return new Promise((resolve) => {
+    fetchAchievementInfo(achieves[0], info => {
+      resolve(info.title);
+    })
+  })
 };
+
+getCharData('Shaweaver', 'caelestrasz', info => {
+  checkHonorLevel(info.achievements.achievementsCompleted).then(result => result);
+});

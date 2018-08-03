@@ -59,7 +59,7 @@ client.on("message", message =>
               },
               fields: [{
                 name: `${info.level} ${info.talents[0].spec.name} ${classLookup[info.class].name}`,
-                value: `${info.items.averageItemLevel} iLvl - ${checkHonorLevel(info.achievements.achievementsCompleted).then(result => result)} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                value: `${info.items.averageItemLevel} iLvl - ${checkHonorLevel(info.achievements.achievementsCompleted)} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
               },
               {
                 name: "Stats:",

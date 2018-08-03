@@ -53,5 +53,5 @@ const checkHonorLevel = data => {
 };
 
 getCharData('Shaweaver', 'caelestrasz', info => {
-  checkHonorLevel(info.achievements.achievementsCompleted).then(result => result);
+  checkHonorLevel(info.achievements.achievementsCompleted);
 });

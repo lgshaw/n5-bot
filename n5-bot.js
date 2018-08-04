@@ -86,8 +86,7 @@ client.on("message", message =>
               }
             ],
           }});
-          };
-        });
+          });
       } else {
         message.channel.send('Please submit a character name (!char *name* *realm*)');
       }

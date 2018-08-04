@@ -37,10 +37,17 @@ client.on("message", message =>
       if (!words[2])
       { region = "caelestrasz" };
       if (charName) {
-        getCharData(charName, region, function(info) {
+        getCharData(charName, region)
+        .then(info => {
           if(info.status == "nok"){
             message.channel.send("Character not found - try again");
-          } else {
+          }
+          let honorRank;
+          getHonorRank(info).then(res =>{
+            hononrRank = res.title;
+          });
+        })
+        .then(info => {
             message.delete();
             imgURL = charImage + info.thumbnail;
             console.log(`${info.name}\n${imgURL}`);
@@ -59,7 +66,7 @@ client.on("message", message =>
               },
               fields: [{
                 name: `${info.level} ${info.talents[0].spec.name} ${classLookup[info.class].name}`,
-                value: `${info.items.averageItemLevel} iLvl - ${getHonorRank(info).then(res => res.title)} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                value: `${info.items.averageItemLevel} iLvl - ${honorRank} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
               },
               // {
               //   name: "Stats:",
@@ -274,7 +281,7 @@ const getHonorRank = data => {
   let filteredRanks = honorRanks.sort(((a, b) => b - a)).filter(item => 
     achieves.includes(parseInt(item)) ? parseInt(item) : false
   );
-  
+
   return fetchAchievementInfo(filteredRanks[0]);
 };
 

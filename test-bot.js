@@ -12,12 +12,12 @@ var apiToken = '2gkmvxynw7tapw3qexvqqr4v';
 
 const sumValues = obj => Object.values(obj).reduce((a, b) => a + b);
 
-const getCharData = (charName, region, callback) => {
+const getCharData = (charName, region) => {
     console.log('getting character data...');
-    axios.get(`https://us.api.battle.net/wow/character/${region}/${charName}?fields=items,titles,talents,progression,achievements,stats,statistics&locale=en_US&apikey=${apiKey}`)
+    return axios.get(`https://us.api.battle.net/wow/character/${region}/${charName}?fields=items,titles,talents,progression,achievements,stats,statistics&locale=en_US&apikey=${apiKey}`)
       .then(response => {
         console.log('got data!');
-        callback(response.data);
+        return response.data;
       })
       .catch(error => {
         console.log(error);
@@ -40,15 +40,16 @@ const fetchAchievementInfo = id => {
     });
 };
 
-const getHonorRank = data => {
+function getHonorRank(data) {
   let achieves = data.achievements.achievementsCompleted;
   let filteredRanks = honorRanks.sort(((a, b) => b - a)).filter(item => 
     achieves.includes(parseInt(item)) ? parseInt(item) : false
   );
-  
+
   return fetchAchievementInfo(filteredRanks[0]);
 };
 
-getCharData('Shaweaver', 'caelestrasz', info => {
-  getHonorRank(info).then(res => res);
+getCharData('Shaweaver', 'caelestrasz').then( info => {
+  getHonorRank(info).then(r => {
+    log(r.title)});
 });

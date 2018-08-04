@@ -169,11 +169,11 @@ client.on("message", message =>
 
 
 
-const getCharData = (charName, region, callback) =>  {
+const getCharData = (charName, region) =>  {
   axios(`https://us.api.battle.net/wow/character/${region}/${charName}?fields=items,titles,talents,progression,achievements,stats,statistics&locale=en_US&apikey=${apiKey}`)
     .then(response => {
       console.log('got data!');
-      callback(response.data);
+      return response.data;
     })
     .catch(error => {
       console.log(error);

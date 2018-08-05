@@ -23,10 +23,6 @@ client.on("message", message =>
   var input = message.content.toUpperCase();
   var words = message.content.split(' ');
   var user = message.author.name;
-  if(input.startsWith("!PIRATE"))
-  {
-    message.channel.send("YARRRRRRGH!")
-  };
 
   if(input.startsWith("!CHAR"))
   {
@@ -44,7 +40,7 @@ client.on("message", message =>
           }
           let honorRank;
           getHonorRank(info).then(res =>{
-            hononrRank = res.title;
+            honorRank = res.title;
           });
         })
         .then(info => {
@@ -161,7 +157,7 @@ client.on("message", message =>
     });
   }
 
-  if(input === "!help")
+  if(input === "!HELP")
   {
     message.channel.send('!char character-name server-name');
   }
@@ -169,12 +165,9 @@ client.on("message", message =>
 
 
 
-const getCharData = (charName, region) =>  {
-  axios(`https://us.api.battle.net/wow/character/${region}/${charName}?fields=items,titles,talents,progression,achievements,stats,statistics&locale=en_US&apikey=${apiKey}`)
-    .then(response => {
-      console.log('got data!');
-      return response.data;
-    })
+const getCharData = ( charName, region ) =>  {
+  return axios(`https://us.api.battle.net/wow/character/${region}/${charName}?fields=items,titles,talents,progression,achievements,stats,statistics&locale=en_US&apikey=${apiKey}`)
+    .then(response => response.data)
     .catch(error => {
       console.log(error);
     });

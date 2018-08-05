@@ -1,11 +1,11 @@
-var Discord = require("discord.js");
+import Discord from 'discord.js';
+import honorRanks from './reference/honorRanks.mjs';
 var bnet = require("battlenet-api")('qnehqjeq658chy2ak9qqkp7q4ft9gmu4');
 var request = require('request');
 var axios = require('axios');
 
-var honorRanks = require('./honorRanks.js');
-var classLookup = require('./classLookup.js');
-var config = require('./config.js');
+
+var config = require('./config-dev.js');
 
 var client = new Discord.Client();
 var wow = bnet.wow;

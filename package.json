@@ -5,6 +5,8 @@
   "main": "n5-bot.js",
   "dependencies": {
     "axios": "^0.18.0",
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
     "battlenet-api": "^0.13.0",
     "discord.js": "^11.1.0",
     "jquery": "^3.1.0",
@@ -15,7 +17,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node n5-bot.js"
+    "start": "node --experimental-modules n5-bot.mjs",
+    "start-dev": "set NODE_ENV=dev&&node n5-bot.js"
   },
   "author": "Liam",
   "license": "ISC"

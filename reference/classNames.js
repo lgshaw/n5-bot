@@ -1,4 +1,4 @@
-module.exports = [
+const classNames = [
   {
     "name": "",
     "color": "",
@@ -38,4 +38,7 @@ module.exports = [
   }, {
     "name": "Demon Hunter",
     "color": 0xA330C9,
-  }];
+  }
+];
+
+export default classNames;

@@ -1,4 +1,4 @@
-const classNames = [
+module.exports = [
   {
     "name": "",
     "color": "",
@@ -40,5 +40,3 @@ const classNames = [
     "color": 0xA330C9,
   }
 ];
-
-export default classNames;

@@ -1,10 +1,11 @@
-import Discord from 'discord.js';
-import blizzard from 'blizzard.js';
-import axios from 'axios';
+var Discord = require("discord.js");
+var blizzard = require('blizzard.js');
+var axios = require('axios');
 
-import {classNames, honorRanks} from './reference/index.mjs';
+var classNames = require('./reference/classNames.js');
+var honorRanks = require('./reference/honorRanks.js');
 
-import config from './config-dev.js';
+var config = require('./config-dev.js');
 var apiKey = config.apiKey;
 var apiToken = config.apiToken;
 var priceTokenToken = config.priceTokenToken;

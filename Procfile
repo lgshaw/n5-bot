@@ -1,1 +1,1 @@
-worker: node n5-bot.mjs
+worker: node n5-bot.js

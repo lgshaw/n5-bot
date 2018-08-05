@@ -19,7 +19,7 @@
     "babel-preset-flow": "^6.23.0"
   },
   "scripts": {
-    "start": "node --experimental-modules n5-bot.mjs",
+    "start": "node n5-bot.js",
     "start-dev": "set NODE_ENV=dev&&node n5-bot.js"
   },
   "author": "Liam",

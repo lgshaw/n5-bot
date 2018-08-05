@@ -1,4 +1,4 @@
-const honorRanks = [
+module.exports = [
     12893,
     12894,
     12895,
@@ -21,5 +21,3 @@ const honorRanks = [
     12916,
     12917
 ];
-
-export default honorRanks;

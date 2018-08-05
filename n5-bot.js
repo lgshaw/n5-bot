@@ -1,5 +1,4 @@
 var Discord = require("discord.js");
-var blizzard = require('blizzard.js');
 var axios = require('axios');
 
 var classNames = require('./reference/classNames.js');
@@ -10,7 +9,6 @@ var apiKey = config.apiKey;
 var apiToken = config.apiToken;
 var priceTokenToken = config.priceTokenToken;
 
-const bnet = blizzard.initialize({apikey: config.apiKey});
 const client = new Discord.Client();
 client.login(config.clientLogin);
 
@@ -130,7 +128,8 @@ client.on("message", message =>
 {
   message.channel.send("Fetching data...")
   .then(message => {
-      getWoWTokenPrice('us', function(info) {
+      getWoWTokenPrice('us')
+      .then(info => {
         if(info.status == "nok"){
           message.channel.send("Error retrieving data");
         } else {
@@ -143,6 +142,9 @@ client.on("message", message =>
           ],
         }});
         };
+      })
+      .catch(error => {
+        log(error)
       });
     });
   }
@@ -151,7 +153,8 @@ client.on("message", message =>
   {
     var realm = words[1];
     var region = words[2];
-    getRealmStatus(realm, region, function(info) {
+    getRealmStatus(realm, region)
+    .then(info => {
       if(info.status == "nok"){
         message.channel.send("Error retrieving realm status");
       } else {
@@ -162,6 +165,9 @@ client.on("message", message =>
           message.channel.send(`'${realm} is **DOWN**'` );
         }
       };
+    })
+    .catch(error => {
+      log(error)
     });
   }
 
@@ -182,16 +188,12 @@ const getCharData = ( charName, region ) =>  {
 }
 
 
-function getRealmStatus(realm, region, callback)  {
-  request(`https://${region}.api.battle.net/wow/realm/status?realms=${realm}&locale=en_${region}&apikey=${apiKey}`, function (error, response, result) {
-    if (!error && response.statusCode == 200) {
-      var info = JSON.parse(result);
-      callback(info);
-    } else {
-      var info = JSON.parse(result);
-      callback(info);
-    };
-  });
+const getRealmStatus = ( realm, region ) => {
+  return axios(`https://${region}.api.battle.net/wow/realm/status?realms=${realm}&locale=en_${region}&apikey=${apiKey}`)
+    .then(response => response.data)
+    .catch(error => {
+      console.log(error);
+    });
 }
 
 const getMythicPlusAffixes = region => {
@@ -202,16 +204,12 @@ const getMythicPlusAffixes = region => {
     });
 }
 
-function getWoWTokenPrice(region, callback)  {
-  request(`https://us.api.battle.net/data/wow/token/?namespace=dynamic-us&locale=en_US&access_token=${priceTokenToken}`, function (error, response, result) {
-    if (!error && response.statusCode == 200) {
-      var info = JSON.parse(result);
-      callback(info);
-    } else {
-      var info = JSON.parse(result);
-      callback(info);
-    };
-  });
+const getWoWTokenPrice = region => {
+  return axios(`https://us.api.battle.net/data/wow/token/?namespace=dynamic-us&locale=en_US&access_token=${priceTokenToken}`)
+    .then(response => response.data)
+    .catch(error => {
+      console.log(error);
+    });
 }
 
 const searchObj = (obj, key, value) => {

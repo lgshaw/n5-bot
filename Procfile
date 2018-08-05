@@ -1,1 +1,1 @@
-worker: node n5-bot.js
+worker: node --experimental-modules n5-bot.mjs

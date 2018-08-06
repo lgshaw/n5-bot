@@ -5,7 +5,7 @@
   "main": "n5-bot.js",
   "dependencies": {
     "axios": "^0.18.0",
-    "discord.js": "^11.3.2"
+    "discord.js": "^11.1.0"
   },
   "engines": {
     "node": "8.3.0"

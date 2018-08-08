@@ -173,7 +173,7 @@ client.on("message", message =>
 
   if(input === "!BFA")
   {
-    countDownToBFA('08/014/2018 08:00:00 AM', function(timer) {
+    countDownToBFA('08/14/2018 08:00:00 AM', function(timer) {
         message.channel.send(`${timer} until Battle For Azeroth launches` );
     });
   }
@@ -199,7 +199,7 @@ const countDownToBFA = (endDate, callback) => {
     let timeRemaining = parseInt((endDate - startDate) / 1000);
     
     if (timeRemaining >= 0) {
-      days = parseInt(timeRemaining / 86400);
+      days = parseInt(timeRemaining / 86400) - 1;
       timeRemaining = (timeRemaining % 86400);
       
       hours = parseInt(timeRemaining / 3600);
@@ -213,7 +213,7 @@ const countDownToBFA = (endDate, callback) => {
       return callback(`${days} days, ${hours} hrs, ${minutes}mins`);
       
     } else {
-      return 'It\'s released you silly sausage. Go and play!';
+      return callback('It\'s released you silly sausage. Go and play!');
     }
   }
 }

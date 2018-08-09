@@ -202,7 +202,7 @@ const countDownToBFA = (endDate, callback) => {
       days = parseInt(timeRemaining / 86400) - 1;
       timeRemaining = (timeRemaining % 86400);
       
-      hours = parseInt(timeRemaining / 3600);
+      hours = parseInt(timeRemaining / 3600) + 14;
       timeRemaining = (timeRemaining % 3600);
       
       minutes = parseInt(timeRemaining / 60);

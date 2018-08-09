@@ -178,6 +178,13 @@ client.on("message", message =>
     });
   }
 
+  if(input === "!BENNETTSMAIN")
+  {
+    countDownToBFA('08/14/2018 08:00:00 AM', function(timer) {
+        message.channel.send(`Bennett has ${timer} to choose to his main` );
+    });
+  }
+
   if(input === "!HELP")
   {
     message.channel.send('!char character-name server-name');

@@ -209,13 +209,20 @@ const countDownToBFA = (endDate, callback) => {
       days = parseInt(timeRemaining / 86400) - 1;
       timeRemaining = (timeRemaining % 86400);
       
-      hours = parseInt(timeRemaining / 3600) + 14;
+      hours = parseInt(timeRemaining / 3600) - 10;
       timeRemaining = (timeRemaining % 3600);
       
       minutes = parseInt(timeRemaining / 60);
       timeRemaining = (timeRemaining % 60);
       
       seconds = parseInt(timeRemaining);
+
+      if(days < 0) {
+        days = 0;
+      }
+      if(hours < 0){
+        hours = 0;
+      }
 
       return callback(`${days} days, ${hours} hrs, ${minutes}mins`);
       

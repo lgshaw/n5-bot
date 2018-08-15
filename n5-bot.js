@@ -31,6 +31,7 @@ client.on("message", message =>
       if (!words[2])
       { realm = 'caelestrasz' };
       if (charName) {
+        log(`${charName} ${realm}`);
         getCharData(charName, realm)
         .then(response => {
           if(response.status == "nok"){
@@ -43,6 +44,7 @@ client.on("message", message =>
               message.delete();
               const imgURL = charImage + info.thumbnail;
               const playerTitles = info.titles;
+              const neckPiece = info.items.neck.azeriteItem.azeriteLevel > 0 ? `Heart of Azeroth: ${info.items.neck.azeriteItem.azeriteLevel}` : null
               log(`${info.name}\n${imgURL}`);
               message.channel.send({embed: {
                 color: classNames[info.class].color,
@@ -55,20 +57,24 @@ client.on("message", message =>
                 },
                 fields: [{
                   name: `${info.level} ${info.talents[0].spec.name} ${classNames[info.class].name}`,
-                  value: `${info.items.averageItemLevel} iLvl - ${honorRank} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                  value: `${info.items.averageItemLevel} iLvl - ${neckPiece}`,
+                },
+                {
+                  name: ``,
+                  value: `${honorRank} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
                 },
                 // {
                 //   name: "Stats:",
                 //   value: `**Crit:** ${info.stats.crit.toFixed(2)}% (${info.stats.critRating}) \n**Haste:** ${info.stats.haste.toFixed(2)}% (${info.stats.hasteRating}) \n**Vers:** ${info.stats.versatilityDamageDoneBonus.toFixed(2)}% (${info.stats.versatility}) \n**Mastery:** ${info.stats.mastery.toFixed(2)}% (${info.stats.masteryRating}),`,
                 // },
-                {
-                  name: "Legion Progression:",
-                  value: `**EN:** ${raidProgressCheck(info.progression.raids[35])}, **ToV:** ${raidProgressCheck(info.progression.raids[36])}, **NH:** ${raidProgressCheck(info.progression.raids[37])}, **ToS:** ${raidProgressCheck(info.progression.raids[38])}, **ABT:** ${raidProgressCheck(info.progression.raids[39])}`,
-                },
-                {
-                  name: "Mythic+ dungeons completed:",
-                  value: `**2+:** ${mythicPlusCheck(info, 33096)}  **5+:** ${mythicPlusCheck(info, 33097)}  **10+:** ${mythicPlusCheck(info, 33098)}  **15+:** ${mythicPlusCheck(info, 32028)}`,
-                },
+                // {
+                //   name: "Legion Progression:",
+                //   value: `**EN:** ${raidProgressCheck(info.progression.raids[35])}, **ToV:** ${raidProgressCheck(info.progression.raids[36])}, **NH:** ${raidProgressCheck(info.progression.raids[37])}, **ToS:** ${raidProgressCheck(info.progression.raids[38])}, **ABT:** ${raidProgressCheck(info.progression.raids[39])}`,
+                // },
+                // {
+                //   name: "Mythic+ dungeons completed:",
+                //   value: `**2+:** ${mythicPlusCheck(info, 33096)}  **5+:** ${mythicPlusCheck(info, 33097)}  **10+:** ${mythicPlusCheck(info, 33098)}  **15+:** ${mythicPlusCheck(info, 32028)}`,
+                // },
                 {
                   name: "Fun fact:",
                   value: funFactCheck(info)
@@ -171,66 +177,11 @@ client.on("message", message =>
     });
   }
 
-  if(input === "!BFA")
-  {
-    countDownToBFA('08/14/2018 08:00:00 AM', function(timer) {
-        message.channel.send(`${timer} until Battle For Azeroth launches` );
-    });
-  }
-
-  if(input === "!BENNETTSMAIN")
-  {
-    countDownToBFA('08/14/2018 08:00:00 AM', function(timer) {
-        message.channel.send(`Bennett has ${timer} to choose to his main` );
-    });
-  }
-
   if(input === "!HELP")
   {
     message.channel.send('!char character-name server-name');
   }
 });
-
-
-const countDownToBFA = (endDate, callback) => {
-  let days, hours, minutes, seconds;
-  
-  endDate = new Date(endDate).getTime();
-
-  calculate();
-  
-  function calculate() {
-    let startDate = new Date();
-    startDate = startDate.getTime();
-    
-    let timeRemaining = parseInt((endDate - startDate) / 1000);
-    
-    if (timeRemaining >= 0) {
-      days = parseInt(timeRemaining / 86400) - 1;
-      timeRemaining = (timeRemaining % 86400);
-      
-      hours = parseInt(timeRemaining / 3600) - 10;
-      timeRemaining = (timeRemaining % 3600);
-      
-      minutes = parseInt(timeRemaining / 60);
-      timeRemaining = (timeRemaining % 60);
-      
-      seconds = parseInt(timeRemaining);
-
-      if(days < 0) {
-        days = 0;
-      }
-      if(hours < 0){
-        hours = 0;
-      }
-
-      return callback(`${days} days, ${hours} hrs, ${minutes}mins`);
-      
-    } else {
-      return callback('It\'s released you silly sausage. Go and play!');
-    }
-  }
-}
 
 const getCharData = ( charName, region ) =>  {
   return axios(`https://us.api.battle.net/wow/character/${region}/${charName}?fields=items,titles,talents,progression,achievements,stats,statistics&locale=en_US&apikey=${apiKey}`)
@@ -313,7 +264,8 @@ const mythicPlusCheck = (data, criteriaID) =>{
 };
 
 const fetchAchievementInfo = id => {
-  log(`getting Achievement data for: ${id}`)
+  log(`getting Achievement data for: ${id}`);
+  if(id === 'undefined') { return };
   return axios.get(`https://us.api.battle.net/wow/achievement/${id}?locale=en_US&apikey=${apiKey}`)
     .then(response => {
       console.log('got data!');

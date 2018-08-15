@@ -4,7 +4,7 @@ var axios = require('axios');
 var classNames = require('./reference/classNames.js');
 var honorRanks = require('./reference/honorRanks.js');
 
-var config = require('./config.js');
+var config = require('./config-dev.js');
 var apiKey = config.apiKey;
 var apiToken = config.apiToken;
 var priceTokenToken = config.priceTokenToken;
@@ -40,7 +40,12 @@ client.on("message", message =>
             const info = response;
             getHonorRank(info)
             .then(response => {
-              const honorRank = response.title;
+              let honorRank;
+              if(response.title) {
+                honorRank = response.title;
+              } else {
+                honorRank = 'Honor Rank < 10';
+              }
               message.delete();
               const imgURL = charImage + info.thumbnail;
               const playerTitles = info.titles;
@@ -272,6 +277,7 @@ const fetchAchievementInfo = id => {
     })
     .catch(error => {
       console.log(error);
+      return error;
     });
 };
 
@@ -280,9 +286,7 @@ const getHonorRank = data => {
   let filteredRanks = honorRanks.sort(((a, b) => b - a)).filter(item => 
     achieves.includes(parseInt(item)) ? parseInt(item) : false
   );
-  if (filteredRanks[0]) {
     return fetchAchievementInfo(filteredRanks[0]);
-  }
 };
 
 function checkTitleExists(player, data) {

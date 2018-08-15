@@ -265,7 +265,6 @@ const mythicPlusCheck = (data, criteriaID) =>{
 
 const fetchAchievementInfo = id => {
   log(`getting Achievement data for: ${id}`);
-  if(id === 'undefined') { return };
   return axios.get(`https://us.api.battle.net/wow/achievement/${id}?locale=en_US&apikey=${apiKey}`)
     .then(response => {
       console.log('got data!');
@@ -281,8 +280,9 @@ const getHonorRank = data => {
   let filteredRanks = honorRanks.sort(((a, b) => b - a)).filter(item => 
     achieves.includes(parseInt(item)) ? parseInt(item) : false
   );
-
-  return fetchAchievementInfo(filteredRanks[0]);
+  if (filteredRanks[0]) {
+    return fetchAchievementInfo(filteredRanks[0]);
+  }
 };
 
 function checkTitleExists(player, data) {

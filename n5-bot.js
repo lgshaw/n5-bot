@@ -60,7 +60,7 @@ client.on("message", message =>
                   value: `${info.items.averageItemLevel} iLvl - ${neckPiece}`,
                 },
                 {
-                  name: ` `,
+                  name: `__`,
                   value: `${honorRank} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
                 },
                 // {

@@ -55,7 +55,7 @@ client.on("message", message =>
                 color: classNames[info.class].color,
                 author: {
                   name: checkTitleExists(info.name, playerTitles),
-                  url: `https://worldofwarcraft.com/en-us/character/${region}/${charName}`,
+                  url: `https://worldofwarcraft.com/en-us/character/${realm}/${charName}`,
                 },
                 image: {
                   url: imgURL.replace(/(avatar)/g, 'inset')

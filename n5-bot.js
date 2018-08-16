@@ -44,7 +44,7 @@ client.on("message", message =>
               if(response.title) {
                 honorRank = response.title;
               } else {
-                honorRank = 'Honor Rank < 10';
+                honorRank = 'Honor Rank < 5';
               }
               message.delete();
               const imgURL = charImage + info.thumbnail;

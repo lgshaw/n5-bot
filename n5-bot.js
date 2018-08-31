@@ -72,10 +72,10 @@ client.on("message", message =>
                 //   name: "Stats:",
                 //   value: `**Crit:** ${info.stats.crit.toFixed(2)}% (${info.stats.critRating}) \n**Haste:** ${info.stats.haste.toFixed(2)}% (${info.stats.hasteRating}) \n**Vers:** ${info.stats.versatilityDamageDoneBonus.toFixed(2)}% (${info.stats.versatility}) \n**Mastery:** ${info.stats.mastery.toFixed(2)}% (${info.stats.masteryRating}),`,
                 // },
-                // {
-                //   name: "Legion Progression:",
-                //   value: `**EN:** ${raidProgressCheck(info.progression.raids[35])}, **ToV:** ${raidProgressCheck(info.progression.raids[36])}, **NH:** ${raidProgressCheck(info.progression.raids[37])}, **ToS:** ${raidProgressCheck(info.progression.raids[38])}, **ABT:** ${raidProgressCheck(info.progression.raids[39])}`,
-                // },
+                {
+                  name: "Raid Progression:",
+                  value: `**Uldir:** ${raidProgressCheck(info.progression.raids[21])}`,
+                },
                 // {
                 //   name: "Mythic+ dungeons completed:",
                 //   value: `**2+:** ${mythicPlusCheck(info, 33096)}  **5+:** ${mythicPlusCheck(info, 33097)}  **10+:** ${mythicPlusCheck(info, 33098)}  **15+:** ${mythicPlusCheck(info, 32028)}`,

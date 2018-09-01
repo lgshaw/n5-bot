@@ -26,7 +26,7 @@ client.on("message", message =>
   {
     message.channel.send("Fetching data...")
     .then(message => {
-      var charName = words[1];
+      var charName = encodeURI(words[1]);
       var realm = words[2];
       if (!words[2])
       { realm = 'caelestrasz' };

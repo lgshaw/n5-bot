@@ -191,9 +191,7 @@ client.on("message", message =>
 const getCharData = ( charName, region ) =>  {
   return axios(`https://us.api.battle.net/wow/character/${region}/${charName}?fields=items,titles,talents,progression,achievements,stats,statistics&locale=en_US&apikey=${apiKey}`)
     .then(response => response.data)
-    .catch(error => {
-      console.log(error);
-    });
+    .catch(error => error.response.data);
 }
 
 

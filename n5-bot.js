@@ -34,7 +34,7 @@ client.on("message", message =>
         log(`${charName} ${realm}`);
         getCharData(charName, realm)
         .then(response => {
-          if(response.status == "nok"){
+          if(response.status === 404){
             message.channel.send("Character not found - try again");
           } else {
             const info = response;

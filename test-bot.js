@@ -60,7 +60,13 @@ const getCharData = ( charName, region ) =>  {
     .catch(error => error.response.data);
 }
 
-getCharData('Shaweaver', 'caelestrasz')
-.then(info => console.log(`**2+:** ${mythicPlusCheck(info, 33096)}  **5+:** ${mythicPlusCheck(info, 33097)}  **10+:** ${mythicPlusCheck(info, 33098)}  **15+:** ${mythicPlusCheck(info, 32028)}`));
+// getCharData('Shaweaver', 'caelestrasz')
+// .then(info => console.log(`**2+:** ${mythicPlusCheck(info, 33096)}  **5+:** ${mythicPlusCheck(info, 33097)}  **10+:** ${mythicPlusCheck(info, 33098)}  **15+:** ${mythicPlusCheck(info, 32028)}`));
 
+const raiderIOScore = (region, realm, name) => {
+  return axios(`https://www.raider.io/api/v1/characters/profile?region=${region}&realm=${realm}&name=${name}&fields=mythic_plus_scores`)
+    .then(response => response.mythic_plus_scores.all)
+    .catch(error => error.message);
+}
+console.log(raiderIOScore('us', 'caelestrasz', 'shaweaver'))
 

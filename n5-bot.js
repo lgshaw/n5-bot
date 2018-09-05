@@ -76,10 +76,10 @@ client.on("message", message =>
                   name: "Raid Progression:",
                   value: `**Uldir:** ${raidProgressCheck(info.progression.raids[21])}`,
                 },
-                {
-                  name: "Raider.IO Mythic+ score:",
-                  value: raiderIOScore('us', realm, charName),
-                },
+                // {
+                //   name: "Raider.IO Mythic+ score:",
+                //   value: raiderIOScore('us', realm, charName),
+                // },
                 // {
                 //   name: "Mythic+ dungeons completed:",
                 //   value: `**2+:** ${mythicPlusCheck(info, 33096)}  **5+:** ${mythicPlusCheck(info, 33097)}  **10+:** ${mythicPlusCheck(info, 33098)}  **15+:** ${mythicPlusCheck(info, 32028)}`,
@@ -258,7 +258,7 @@ const raidProgressCheck = data => {
 
 const raiderIOScore = (region, realm, name) => {
   return axios(`https://www.raider.io/api/v1/characters/profile?region=${region}&realm=${realm}&name=${name}&fields=mythic_plus_scores`)
-    .then(response => response.mythic_plus_scores.all.toString())
+    .then(response => response.mythic_plus_scores.all)
     .catch(error => error.message);
 }
 

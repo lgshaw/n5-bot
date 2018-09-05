@@ -256,7 +256,7 @@ const raidProgressCheck = data => {
   };
 };
 
-const raiderIOScore = (reion, realm, name) => {
+const raiderIOScore = (region, realm, name) => {
   return axios(`https://www.raider.io/api/v1/characters/profile?region=${region}&realm=${realm}&name=${name}&fields=mythic_plus_scores`)
     .then(response => response.mythic_plus_scores.all)
     .catch(error => error.message);

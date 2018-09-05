@@ -40,13 +40,27 @@ var config = require('./config-dev.js');
 var apiKey = config.apiKey;
 var apiToken = config.apiToken;
 
+
+const mythicPlusCheck = (data, criteriaID) =>{
+  // var achieves = [11183,11184,11185,11162];
+  let criteriaList = data.achievements.criteria;
+  let criteriaQty = data.achievements.criteriaQuantity;
+
+  let qty = criteriaQty[criteriaList.indexOf(criteriaID)];
+  if(!qty){
+    return '-';
+  } else {
+    return qty;
+  }
+};
+
 const getCharData = ( charName, region ) =>  {
   return axios(`https://us.api.battle.net/wow/character/${region}/${charName}?fields=items,titles,talents,progression,achievements,stats,statistics&locale=en_US&apikey=${apiKey}`)
     .then(response => response.data)
     .catch(error => error.response.data);
 }
 
-getCharData('blahblah', 'caelestrasz')
-.then(response => console.log(response.status));
+getCharData('Shaweaver', 'caelestrasz')
+.then(info => console.log(`**2+:** ${mythicPlusCheck(info, 33096)}  **5+:** ${mythicPlusCheck(info, 33097)}  **10+:** ${mythicPlusCheck(info, 33098)}  **15+:** ${mythicPlusCheck(info, 32028)}`));
 
 

@@ -89,7 +89,7 @@ const testFn = (charName, region, token) => {
 getAuthToken()
 .then( response => {
   getCharData('shaweaver','caelestrasz', response)
-  .then( response => console.log(response.response))
+  .then( response => console.log(response.response.progression.raids[40]))
   .catch(error => console.log(error));
 })
 .catch(error => console.log(error));

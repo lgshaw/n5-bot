@@ -224,7 +224,7 @@ const getAuthToken = () =>  {
 const getCharData = ( charName, region, token ) =>  {
   return axios(`https://us.api.blizzard.com/wow/character/${region}/${charName}?locale=en_US&fields=items,titles,talents,progression,achievements,stats,statistics&access_token=${token}`)
     .then(response => {
-      return {reponse: response.data, token: token}
+      return {response: response.data, token: token}
     })
     .catch(error => error.response.data);
 }

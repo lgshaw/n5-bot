@@ -55,15 +55,20 @@ const mythicPlusCheck = (data, criteriaID) =>{
     return qty;
   }
 };
-const getAuthToken = (callback, var1, var2) =>  {
+const getAuthToken = () =>  {
   return axios(`https://us.battle.net/oauth/token?grant_type=client_credentials&client_id=${client_id}&client_secret=${client_secret}`)
-    .then(response => callback(var1, var2, response.data.access_token))
+    .then(response => 
+      { let token = response.data.access_token;
+        return token
+      })
     .catch(error => error.response.data);
 }
 
 const getCharData = ( charName, region, token ) =>  {
   return axios(`https://us.api.blizzard.com/wow/character/${region}/${charName}?locale=en_US&fields=items,titles,talents,progression,achievements,stats,statistics&access_token=${token}`)
-    .then(response => console.log(response.data))
+    .then(response => {
+      return {response: response.data, token: token}
+    })
     .catch(error => error.response.data);
 }
 
@@ -81,6 +86,12 @@ const testFn = (charName, region, token) => {
 // }
 ;
 
-getAuthToken(getCharData, 'shaweaver', 'caelestrasz');
+getAuthToken()
+.then( response => {
+  getCharData('shaweaver','caelestrasz', response)
+  .then( response => console.log(response.response))
+  .catch(error => console.log(error));
+})
+.catch(error => console.log(error));
 
 //callback(var1, var2, response.data.access_token)

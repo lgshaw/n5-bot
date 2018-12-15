@@ -215,7 +215,7 @@ const getAuthToken = () =>  {
   return axios(`https://us.battle.net/oauth/token?grant_type=client_credentials&client_id=${client_id}&client_secret=${client_secret}`)
     .then(response => 
       { let token = response.data.access_token;
-        return token
+        return global.token
       })
     .catch(error => error.response.data);
 }
@@ -321,7 +321,7 @@ const getHonorRank = data => {
   let filteredRanks = honorRanks.sort(((a, b) => b - a)).filter(item => 
     achieves.includes(parseInt(item)) ? parseInt(item) : false
   );
-    return fetchAchievementInfo(filteredRanks[0], token);
+    return fetchAchievementInfo(filteredRanks[0], global.token);
 };
 
 function checkTitleExists(player, data) {
@@ -362,4 +362,4 @@ const log = data => {
   console.log(data);
 }
 
-console.log("Beep boop - bot running!");
+log("Beep boop - bot running!");

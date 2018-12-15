@@ -7,7 +7,8 @@ var honorRanks = require('./reference/honorRanks.js');
 var config = require('./config.js');
 var apiKey = config.apiKey;
 var apiToken = config.apiToken;
-var priceTokenToken = config.priceTokenToken;
+var client_id = config.client_id;
+var client_secret = config.client_secret;
 
 const client = new Discord.Client();
 client.login(config.clientLogin);
@@ -143,25 +144,31 @@ client.on("message", message =>
 {
   message.channel.send("Fetching data...")
   .then(message => {
-      getWoWTokenPrice('us')
-      .then(info => {
-        if(info.status == "nok"){
-          message.channel.send("Error retrieving data");
-        } else {
-          message.delete();
-          message.channel.send({embed: {
-            fields: [{
-              name: "Current Token Price",
-              value: format((info.price / 10000)),
-            },
-          ],
-        }});
-        };
-      })
+    getAuthToken()
+      .then(response => {
+        getWoWTokenPrice('us', response)
+        .then(info => {
+          if(info.status == "nok"){
+            message.channel.send("Error retrieving data");
+          } else {
+            message.delete();
+            message.channel.send({embed: {
+              fields: [{
+                name: "Current Token Price",
+                value: format((info.price / 10000)),
+              },
+            ],
+          }});
+          };
+        })
       .catch(error => {
         log(error)
       });
-    });
+    })
+    .catch(error => {
+      log(error)
+    })
+  );
   }
 
   if(input === "!STATUS")
@@ -192,15 +199,21 @@ client.on("message", message =>
   }
 });
 
-const getCharData = ( charName, region ) =>  {
-  return axios(`https://us.api.battle.net/wow/character/${region}/${charName}?fields=items,titles,talents,progression,achievements,stats,statistics&locale=en_US&apikey=${apiKey}`)
+const getAuthToken = () =>  {
+  return axios(`https://us.battle.net/oauth/token?grant_type=client_credentials&client_id=${client_id}&client_secret=${client_secret}`)
+    .then(response => response.data.access_token)
+    .catch(error => error.response.data);
+}
+
+const getCharData = ( charName, region, token ) =>  {
+  return axios(`https://us.api.blizzard.com/wow/character/${region}/${charName}?locale=en_US&fields=items,titles,talents,progression,achievements,stats,statistics&access_token=${token}`)
     .then(response => response.data)
     .catch(error => error.response.data);
 }
 
 
-const getRealmStatus = ( realm, region ) => {
-  return axios(`https://${region}.api.battle.net/wow/realm/status?realms=${realm}&locale=en_${region}&apikey=${apiKey}`)
+const getRealmStatus = ( realm, region, token ) => {
+  return axios(`https://${region}.api.blizzard.com/wow/realm/status?realms=${realm}&locale=en_${region}&access_token=${token}`)
     .then(response => response.data)
     .catch(error => {
       console.log(error);
@@ -215,8 +228,8 @@ const getMythicPlusAffixes = region => {
     });
 }
 
-const getWoWTokenPrice = region => {
-  return axios(`https://us.api.battle.net/data/wow/token/?namespace=dynamic-us&locale=en_US&access_token=${priceTokenToken}`)
+const getWoWTokenPrice = ( region, token ) => {
+  return axios(`https://us.api.blizzard.com/data/wow/token/?namespace=dynamic-us&locale=en_US&access_token=${token}`)
     .then(response => response.data)
     .catch(error => {
       console.log(error);

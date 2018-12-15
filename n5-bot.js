@@ -40,8 +40,9 @@ client.on("message", message =>
             if(response.status === 'nok'){
               message.channel.send("Character not found - try again");
             } else {
-              const info = response;
-              getHonorRank(info)
+              const info = response.response;
+              const token = response.token;
+              getHonorRank(info, token)
               .then(response => {
                 let honorRank;
                 if(response.title) {
@@ -215,14 +216,16 @@ const getAuthToken = () =>  {
   return axios(`https://us.battle.net/oauth/token?grant_type=client_credentials&client_id=${client_id}&client_secret=${client_secret}`)
     .then(response => 
       { let token = response.data.access_token;
-        return global.token
+        return token
       })
     .catch(error => error.response.data);
 }
 
 const getCharData = ( charName, region, token ) =>  {
   return axios(`https://us.api.blizzard.com/wow/character/${region}/${charName}?locale=en_US&fields=items,titles,talents,progression,achievements,stats,statistics&access_token=${token}`)
-    .then(response => response.data)
+    .then(response => {
+      return {reponse: response.data, token: token}
+    })
     .catch(error => error.response.data);
 }
 
@@ -316,12 +319,12 @@ const fetchAchievementInfo = ( id, token ) => {
     });
 };
 
-const getHonorRank = data => {
+const getHonorRank = (data, token) => {
   let achieves = data.achievements.achievementsCompleted;
   let filteredRanks = honorRanks.sort(((a, b) => b - a)).filter(item => 
     achieves.includes(parseInt(item)) ? parseInt(item) : false
   );
-    return fetchAchievementInfo(filteredRanks[0], global.token);
+    return fetchAchievementInfo(filteredRanks[0], token);
 };
 
 function checkTitleExists(player, data) {

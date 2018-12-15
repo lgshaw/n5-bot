@@ -168,8 +168,8 @@ client.on("message", message =>
     .catch(error => {
       log(error)
     })
-  );
-  }
+  })
+}
 
   if(input === "!STATUS")
   {

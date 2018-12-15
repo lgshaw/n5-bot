@@ -33,68 +33,74 @@ client.on("message", message =>
       { realm = 'caelestrasz' };
       if (charName) {
         log(`${charName} ${realm}`);
-        getCharData(charName, realm)
+        getAuthToken()
         .then(response => {
-          if(response.status === 'nok'){
-            message.channel.send("Character not found - try again");
-          } else {
-            const info = response;
-            getHonorRank(info)
-            .then(response => {
-              let honorRank;
-              if(response.title) {
-                honorRank = response.title;
-              } else {
-                honorRank = 'Honor Rank < 5';
-              }
-              message.delete();
-              const imgURL = charImage + info.thumbnail;
-              const playerTitles = info.titles;
-              const neckPiece = info.items.neck.azeriteItem.azeriteLevel > 0 ? `Heart of Azeroth: ${info.items.neck.azeriteItem.azeriteLevel}` : null
-              log(`${info.name}\n${imgURL}`);
-              message.channel.send({embed: {
-                color: classNames[info.class].color,
-                author: {
-                  name: checkTitleExists(info.name, playerTitles),
-                  url: `https://worldofwarcraft.com/en-us/character/${realm}/${charName}`,
-                },
-                image: {
-                  url: imgURL.replace(/(avatar)/g, 'inset')
-                },
-                fields: [{
-                  name: `${info.level} ${info.talents[0].spec.name} ${classNames[info.class].name}`,
-                  value: `${info.items.averageItemLevel} iLvl - ${neckPiece}`,
-                },
-                {
-                  name: `${honorRank} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
-                  value: '_____',
-                },
-                // {
-                //   name: "Stats:",
-                //   value: `**Crit:** ${info.stats.crit.toFixed(2)}% (${info.stats.critRating}) \n**Haste:** ${info.stats.haste.toFixed(2)}% (${info.stats.hasteRating}) \n**Vers:** ${info.stats.versatilityDamageDoneBonus.toFixed(2)}% (${info.stats.versatility}) \n**Mastery:** ${info.stats.mastery.toFixed(2)}% (${info.stats.masteryRating}),`,
-                // },
-                {
-                  name: "Raid Progression:",
-                  value: `**Uldir:** ${raidProgressCheck(info.progression.raids[21])}`,
-                },
-                // {
-                //   name: "Raider.IO Mythic+ score:",
-                //   value: raiderIOScore('us', realm, charName),
-                // },
-                // {
-                //   name: "Mythic+ dungeons completed:",
-                //   value: `**2+:** ${mythicPlusCheck(info, 33096)}  **5+:** ${mythicPlusCheck(info, 33097)}  **10+:** ${mythicPlusCheck(info, 33098)}  **15+:** ${mythicPlusCheck(info, 32028)}`,
-                // },
-                {
-                  name: "Fun fact:",
-                  value: funFactCheck(info)
-                }],
-              }});
-            })
-            .catch(error =>{
-              log(error);
-            });
-          };
+          getCharData(charName, realm, response)
+          .then(response => {
+            if(response.status === 'nok'){
+              message.channel.send("Character not found - try again");
+            } else {
+              const info = response;
+              getHonorRank(info)
+              .then(response => {
+                let honorRank;
+                if(response.title) {
+                  honorRank = response.title;
+                } else {
+                  honorRank = 'Honor Rank < 5';
+                }
+                message.delete();
+                const imgURL = charImage + info.thumbnail;
+                const playerTitles = info.titles;
+                const neckPiece = info.items.neck.azeriteItem.azeriteLevel > 0 ? `Heart of Azeroth: ${info.items.neck.azeriteItem.azeriteLevel}` : null
+                log(`${info.name}\n${imgURL}`);
+                message.channel.send({embed: {
+                  color: classNames[info.class].color,
+                  author: {
+                    name: checkTitleExists(info.name, playerTitles),
+                    url: `https://worldofwarcraft.com/en-us/character/${realm}/${charName}`,
+                  },
+                  image: {
+                    url: imgURL.replace(/(avatar)/g, 'inset')
+                  },
+                  fields: [{
+                    name: `${info.level} ${info.talents[0].spec.name} ${classNames[info.class].name}`,
+                    value: `${info.items.averageItemLevel} iLvl - ${neckPiece}`,
+                  },
+                  {
+                    name: `${honorRank} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                    value: '_____',
+                  },
+                  // {
+                  //   name: "Stats:",
+                  //   value: `**Crit:** ${info.stats.crit.toFixed(2)}% (${info.stats.critRating}) \n**Haste:** ${info.stats.haste.toFixed(2)}% (${info.stats.hasteRating}) \n**Vers:** ${info.stats.versatilityDamageDoneBonus.toFixed(2)}% (${info.stats.versatility}) \n**Mastery:** ${info.stats.mastery.toFixed(2)}% (${info.stats.masteryRating}),`,
+                  // },
+                  {
+                    name: "Raid Progression:",
+                    value: `**Uldir:** ${raidProgressCheck(info.progression.raids[21])}`,
+                  },
+                  // {
+                  //   name: "Raider.IO Mythic+ score:",
+                  //   value: raiderIOScore('us', realm, charName),
+                  // },
+                  // {
+                  //   name: "Mythic+ dungeons completed:",
+                  //   value: `**2+:** ${mythicPlusCheck(info, 33096)}  **5+:** ${mythicPlusCheck(info, 33097)}  **10+:** ${mythicPlusCheck(info, 33098)}  **15+:** ${mythicPlusCheck(info, 32028)}`,
+                  // },
+                  {
+                    name: "Fun fact:",
+                    value: funFactCheck(info)
+                  }],
+                }});
+              })
+              .catch(error =>{
+                log(error);
+              });
+            };
+          })
+          .catch(error => {
+            log(error)
+          });
         })
         .catch(error => {
           log(error)
@@ -175,18 +181,24 @@ client.on("message", message =>
   {
     var realm = words[1];
     var region = words[2];
-    getRealmStatus(realm, region)
-    .then(info => {
-      if(info.status == "nok"){
-        message.channel.send("Error retrieving realm status");
-      } else {
-        if (info.realms[0].status = true)
-        {
-          message.channel.send(`'${realm} is **UP**'` );
+    getAuthToken()
+    .then(response => {
+      getRealmStatus(realm, region)
+      .then(info => {
+        if(info.status == "nok"){
+          message.channel.send("Error retrieving realm status");
         } else {
-          message.channel.send(`'${realm} is **DOWN**'` );
-        }
-      };
+          if (info.realms[0].status = true)
+          {
+            message.channel.send(`'${realm} is **UP**'` );
+          } else {
+            message.channel.send(`'${realm} is **DOWN**'` );
+          }
+        };
+      })
+      .catch(error => {
+        log(error)
+      });
     })
     .catch(error => {
       log(error)
@@ -201,7 +213,10 @@ client.on("message", message =>
 
 const getAuthToken = () =>  {
   return axios(`https://us.battle.net/oauth/token?grant_type=client_credentials&client_id=${client_id}&client_secret=${client_secret}`)
-    .then(response => response.data.access_token)
+    .then(response => 
+      { let token = response.data.access_token;
+        return token
+      })
     .catch(error => error.response.data);
 }
 
@@ -288,9 +303,9 @@ const mythicPlusCheck = (data, criteriaID) =>{
   }
 };
 
-const fetchAchievementInfo = id => {
+const fetchAchievementInfo = ( id, token ) => {
   log(`getting Achievement data for: ${id}`);
-  return axios.get(`https://us.api.battle.net/wow/achievement/${id}?locale=en_US&apikey=${apiKey}`)
+  return axios.get(`https://us.api.blizzard.com/wow/achievement/${id}?locale=en_US&access_token=${token}`)
     .then(response => {
       console.log('got data!');
       return response.data;
@@ -306,7 +321,7 @@ const getHonorRank = data => {
   let filteredRanks = honorRanks.sort(((a, b) => b - a)).filter(item => 
     achieves.includes(parseInt(item)) ? parseInt(item) : false
   );
-    return fetchAchievementInfo(filteredRanks[0]);
+    return fetchAchievementInfo(filteredRanks[0], token);
 };
 
 function checkTitleExists(player, data) {

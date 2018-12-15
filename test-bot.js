@@ -42,6 +42,7 @@ var apiToken = config.apiToken;
 var client_id = config.client_id;
 var client_secret = config.client_secret;
 
+var oAuth;
 
 const mythicPlusCheck = (data, criteriaID) =>{
   // var achieves = [11183,11184,11185,11162];
@@ -58,8 +59,8 @@ const mythicPlusCheck = (data, criteriaID) =>{
 const getAuthToken = () =>  {
   return axios(`https://us.battle.net/oauth/token?grant_type=client_credentials&client_id=${client_id}&client_secret=${client_secret}`)
     .then(response => 
-      { let token = response.data.access_token;
-        return token
+      { oAuth = response.data;
+        // return token
       })
     .catch(error => error.response.data);
 }
@@ -72,12 +73,12 @@ const getCharData = ( charName, region, token ) =>  {
     .catch(error => error.response.data);
 }
 
-const testFn = (charName, region, token) => {
-  console.log(`https://us.api.battle.net/wow/character/${region}/${charName}?fields=items,titles,talents,progression,achievements,stats,statistics&locale=en_US&access_token=${token}`)
+const getMythicData = ( name, realm, token ) =>  {
+  return axios(`https://us.api.blizzard.com/profile/wow/character/${realm}/${name}/mythic-keystone-profile/season/1?namespace=profile-us&locale=en_US&access_token=${token}`)
+    .then(response => response)
+    .catch(error => error.response);
 }
 
-// getCharData('Shaweaver', 'caelestrasz')
-// .then(info => console.log(`**2+:** ${mythicPlusCheck(info, 33096)}  **5+:** ${mythicPlusCheck(info, 33097)}  **10+:** ${mythicPlusCheck(info, 33098)}  **15+:** ${mythicPlusCheck(info, 32028)}`));
 
 // const raiderIOScore = (region, realm, name) => {
 //   return axios(`https://www.raider.io/api/v1/characters/profile?region=${region}&realm=${realm}&name=${name}&fields=mythic_plus_scores`)
@@ -88,9 +89,10 @@ const testFn = (charName, region, token) => {
 
 getAuthToken()
 .then( response => {
-  getCharData('shaweaver','caelestrasz', response)
-  .then( response => console.log(response.response.progression.raids[40]))
-  .catch(error => console.log(error));
+  console.log(oAuth.access_token);
+  // getMythicData('shaweaver','caelestrasz', token)
+  // .then( response => console.log(response))
+  // .catch(error => console.log(error));
 })
 .catch(error => console.log(error));
 

@@ -5,10 +5,10 @@ var classNames = require('./reference/classNames.js');
 var honorRanks = require('./reference/honorRanks.js');
 
 var config = require('./config.js');
-var apiKey = config.apiKey;
-var apiToken = config.apiToken;
 var client_id = config.client_id;
 var client_secret = config.client_secret;
+
+var oAuth; //global variable for saving oAuth access_token for future API calls
 
 const client = new Discord.Client();
 client.login(config.clientLogin);
@@ -35,14 +35,13 @@ client.on("message", message =>
         log(`${charName} ${realm}`);
         getAuthToken()
         .then(response => {
-          getCharData(charName, realm, response)
+          getCharData(charName, realm, oAuth.access_token)
           .then(response => {
             if(response.status === 'nok'){
               message.channel.send("Character not found - try again");
             } else {
-              const info = response.response;
-              const token = response.token;
-              getHonorRank(info, token)
+              const info = response;
+              getHonorRank(info)
               .then(response => {
                 let honorRank;
                 if(response.title) {
@@ -153,7 +152,7 @@ client.on("message", message =>
   .then(message => {
     getAuthToken()
       .then(response => {
-        getWoWTokenPrice('us', response)
+        getWoWTokenPrice('us', oAuth.access_token)
         .then(info => {
           if(info.status == "nok"){
             message.channel.send("Error retrieving data");
@@ -214,18 +213,13 @@ client.on("message", message =>
 
 const getAuthToken = () =>  {
   return axios(`https://us.battle.net/oauth/token?grant_type=client_credentials&client_id=${client_id}&client_secret=${client_secret}`)
-    .then(response => 
-      { let token = response.data.access_token;
-        return token
-      })
+    .then(response => oAuth = response.data )
     .catch(error => error.response.data);
 }
 
 const getCharData = ( charName, region, token ) =>  {
   return axios(`https://us.api.blizzard.com/wow/character/${region}/${charName}?locale=en_US&fields=items,titles,talents,progression,achievements,stats,statistics&access_token=${token}`)
-    .then(response => {
-      return {response: response.data, token: token}
-    })
+    .then(response => response.data)
     .catch(error => error.response.data);
 }
 
@@ -319,12 +313,12 @@ const fetchAchievementInfo = ( id, token ) => {
     });
 };
 
-const getHonorRank = (data, token) => {
+const getHonorRank = (data) => {
   let achieves = data.achievements.achievementsCompleted;
   let filteredRanks = honorRanks.sort(((a, b) => b - a)).filter(item => 
     achieves.includes(parseInt(item)) ? parseInt(item) : false
   );
-    return fetchAchievementInfo(filteredRanks[0], token);
+    return fetchAchievementInfo(filteredRanks[0], oAuth.access_token);
 };
 
 function checkTitleExists(player, data) {

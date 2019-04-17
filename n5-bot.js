@@ -77,7 +77,7 @@ client.on("message", message =>
                   // },
                   {
                     name: "Raid Progression:",
-                    value: `**Uldir:** ${raidProgressCheck(info.progression.raids[40])}  **BoD:** ${raidProgressCheck(info.progression.raids[41])}`,
+                    value: `**Uldir:** ${raidProgressCheck(info.progression.raids[40])}  **BoD:** ${raidProgressCheck(info.progression.raids[41])}  **CoS:** ${raidProgressCheck(info.progression.raids[42])}`,
                   },
                   // {
                   //   name: "Raider.IO Mythic+ score:",

@@ -41,14 +41,12 @@ client.on("message", message =>
               message.channel.send("Character not found - try again");
             } else {
               const info = response;
-              getHonorRank(info)
+              getHonorRank(info.pvp_summary.href)
               .then(response => {
                 let honorRank;
-                if(response.title) {
-                  honorRank = response.title;
-                } else {
-                  honorRank = 'Honor Rank < 5';
-                }
+                if(response) {
+                  honorRank = response;
+                } 
                 message.delete();
                 const imgURL = charImage + info.thumbnail;
                 const playerTitles = info.titles;
@@ -71,22 +69,10 @@ client.on("message", message =>
                     name: `${honorRank} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
                     value: '_____',
                   },
-                  // {
-                  //   name: "Stats:",
-                  //   value: `**Crit:** ${info.stats.crit.toFixed(2)}% (${info.stats.critRating}) \n**Haste:** ${info.stats.haste.toFixed(2)}% (${info.stats.hasteRating}) \n**Vers:** ${info.stats.versatilityDamageDoneBonus.toFixed(2)}% (${info.stats.versatility}) \n**Mastery:** ${info.stats.mastery.toFixed(2)}% (${info.stats.masteryRating}),`,
-                  // },
                   {
                     name: "Raid Progression:",
-                    value: `**Uldir:** ${raidProgressCheck(info.progression.raids[40])}  **BoD:** ${raidProgressCheck(info.progression.raids[41])}  **CoS:** ${raidProgressCheck(info.progression.raids[42])}`,
+                    value: `**Eternal Palace:** ${raidProgressCheck(info.progression.raids[43])}`,
                   },
-                  // {
-                  //   name: "Raider.IO Mythic+ score:",
-                  //   value: raiderIOScore('us', realm, charName),
-                  // },
-                  // {
-                  //   name: "Mythic+ dungeons completed:",
-                  //   value: `**2+:** ${mythicPlusCheck(info, 33096)}  **5+:** ${mythicPlusCheck(info, 33097)}  **10+:** ${mythicPlusCheck(info, 33098)}  **15+:** ${mythicPlusCheck(info, 32028)}`,
-                  // },
                   {
                     name: "Fun fact:",
                     value: funFactCheck(info)
@@ -313,12 +299,16 @@ const fetchAchievementInfo = ( id, token ) => {
     });
 };
 
-const getHonorRank = (data) => {
-  let achieves = data.achievements.achievementsCompleted;
-  let filteredRanks = honorRanks.sort(((a, b) => b - a)).filter(item => 
-    achieves.includes(parseInt(item)) ? parseInt(item) : false
-  );
-    return fetchAchievementInfo(filteredRanks[0], oAuth.access_token);
+const getHonorRank = (href) => {
+  return axios.get(`${href}&access_token=${oAuth.access_token}`)
+    .then(response => {
+      console.log('got data!');
+      return response.data.honor_level;
+    })
+    .catch(error => {
+      console.log(error);
+      return error;
+    });
 };
 
 function checkTitleExists(player, data) {

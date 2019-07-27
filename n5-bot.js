@@ -349,4 +349,4 @@ const log = data => {
   console.log(data);
 }
 
-log("Beep boop - bot running!");
+log("Beep boop - n5 bot running!");

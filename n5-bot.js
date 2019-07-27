@@ -44,9 +44,11 @@ client.on("message", message =>
               getHonorRank(info)
               .then(response => {
                 let honorRank;
-                if(response) {
-                  honorRank = response;
-                } 
+                if(response.title) {
+                  honorRank = response.title;
+                } else {
+                  honorRank = 'Honor Rank < 5';
+                }
                 message.delete();
                 const imgURL = charImage + info.thumbnail;
                 const playerTitles = info.titles;

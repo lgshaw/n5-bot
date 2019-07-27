@@ -41,7 +41,7 @@ client.on("message", message =>
               message.channel.send("Character not found - try again");
             } else {
               const info = response;
-              getHonorRank(info.pvp_summary.href)
+              getHonorRank(info)
               .then(response => {
                 let honorRank;
                 if(response) {
@@ -299,16 +299,12 @@ const fetchAchievementInfo = ( id, token ) => {
     });
 };
 
-const getHonorRank = (href) => {
-  return axios.get(`${href}&access_token=${oAuth.access_token}`)
-    .then(response => {
-      console.log('got data!');
-      return response.data.honor_level;
-    })
-    .catch(error => {
-      console.log(error);
-      return error;
-    });
+const getHonorRank = (data) => {
+  let achieves = data.achievements.achievementsCompleted;
+  let filteredRanks = honorRanks.sort(((a, b) => b - a)).filter(item => 
+    achieves.includes(parseInt(item)) ? parseInt(item) : false
+  );
+    return fetchAchievementInfo(filteredRanks[0], oAuth.access_token);
 };
 
 function checkTitleExists(player, data) {

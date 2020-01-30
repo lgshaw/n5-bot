@@ -4,7 +4,7 @@ var axios = require('axios');
 var classNames = require('./reference/classNames.js');
 var honorRanks = require('./reference/honorRanks.js');
 
-var config = require('./config.js');
+var config = require('./config-dev.js');
 var client_id = config.client_id;
 var client_secret = config.client_secret;
 
@@ -52,7 +52,8 @@ client.on("message", message =>
                 message.delete();
                 const imgURL = charImage + info.thumbnail;
                 const playerTitles = info.titles;
-                const neckPiece = info.items.neck.azeriteItem.azeriteLevel > 0 ? `Heart of Azeroth: ${info.items.neck.azeriteItem.azeriteLevel}` : null
+                const neckPiece = info.items.neck.azeriteItem.azeriteLevel > 0 ? `Heart of Azeroth: ${info.items.neck.azeriteItem.azeriteLevel}` : null;
+                const cloak = info.items.back.quality > 0 ? `Cloak (${info.items.back.itemLevel} ilvl)` : null;
                 log(`${info.name}\n${imgURL}`);
                 message.channel.send({embed: {
                   color: classNames[info.class].color,
@@ -65,7 +66,7 @@ client.on("message", message =>
                   },
                   fields: [{
                     name: `${info.level} ${info.talents[0].spec.name} ${classNames[info.class].name}`,
-                    value: `${info.items.averageItemLevel} iLvl - ${neckPiece}`,
+                    value: `${info.items.averageItemLevel} iLvl - ${neckPiece} - ${cloak}`,
                   },
                   {
                     name: `${honorRank} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
@@ -73,7 +74,7 @@ client.on("message", message =>
                   },
                   {
                     name: "Raid Progression:",
-                    value: `**Eternal Palace:** ${raidProgressCheck(info.progression.raids[43])}`,
+                    value: `**N'yalotha:** ${raidProgressCheck(info.progression.raids[44])}`,
                   },
                   {
                     name: "Fun fact:",

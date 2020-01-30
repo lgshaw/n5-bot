@@ -4,7 +4,7 @@ var axios = require('axios');
 var classNames = require('./reference/classNames.js');
 var honorRanks = require('./reference/honorRanks.js');
 
-var config = require('./config-dev.js');
+var config = require('./config.js');
 var client_id = config.client_id;
 var client_secret = config.client_secret;
 

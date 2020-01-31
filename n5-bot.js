@@ -74,7 +74,7 @@ client.on("message", message =>
                   },
                   {
                     name: "Raid Progression:",
-                    value: `**N'yalotha:** ${raidProgressCheck(info.progression.raids[44])}`,
+                    value: `**Ny'alotha:** ${raidProgressCheck(info.progression.raids[44])}`,
                   },
                   {
                     name: "Fun fact:",

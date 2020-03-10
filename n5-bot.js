@@ -52,7 +52,7 @@ client.on("message", message =>
                 message.delete();
                 const imgURL = charImage + info.thumbnail;
                 const playerTitles = info.titles;
-                const neckPiece = info.items.neck.azeriteItem.azeriteLevel > 0 ? `Heart of Azeroth: ${info.items.neck.azeriteItem.azeriteLevel}` : null;
+                const neckPiece = (info.items.neck.azeriteItem.azeriteLevel && info.items.neck.azeriteItem.azeriteLevel > 0) ? `Heart of Azeroth: ${info.items.neck.azeriteItem.azeriteLevel}` : null;
                 const cloak = info.items.back.quality > 0 ? `Cloak (${info.items.back.itemLevel} ilvl)` : null;
                 log(`${info.name}\n${imgURL}`);
                 message.channel.send({embed: {

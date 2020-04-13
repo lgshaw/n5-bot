@@ -65,13 +65,26 @@ const getAuthToken = () =>  {
     .catch(error => error.response.data);
 }
 
-const getCharData = ( charName, region, token ) =>  {
-  return axios(`https://us.api.blizzard.com/wow/character/${region}/${charName}?locale=en_US&fields=items,titles,talents,progression,achievements,stats,statistics&access_token=${token}`)
+const getCharData = ( charName, realm, token ) =>  {
+  return axios(`https://us.api.blizzard.com/profile/wow/character/${realm}/${charName}?namespace=profile-us&locale=en_US&access_token=${token}`)
     .then(response => {
+      console.log(response);
       return {response: response.data, token: token}
     })
     .catch(error => error.response.data);
 }
+
+const getCharAchievements = ( charName, realm, token ) =>  {
+  return axios(`https://us.api.blizzard.com/profile/wow/character/${realm}/${charName}/achievements/statistics?namespace=profile-us&locale=en_US&access_token=${token}`)
+    .then(response => {
+      //console.log(response);
+      return {response: response.data.response, token: token}
+    })
+    .catch(error => error.response.data);
+}
+
+// https://us.api.blizzard.com/profile/wow/character/scarlet-crusade/${charName}?namespace=profile-us
+//https://us.api.blizzard.com/profile/wow/character/tichondrius/charactername/achievements?namespace=profile-us&locale=en_US&access_token=USX35eBMoxQm1Y8ahhRxclGx30RVjUbwbs
 
 const getMythicData = ( name, realm, token ) =>  {
   return axios(`https://us.api.blizzard.com/profile/wow/character/${realm}/${name}/mythic-keystone-profile/season/1?namespace=profile-us&locale=en_US&access_token=${token}`)
@@ -90,9 +103,9 @@ const getMythicData = ( name, realm, token ) =>  {
 getAuthToken()
 .then( response => {
   console.log(oAuth.access_token);
-  // getMythicData('shaweaver','caelestrasz', token)
-  // .then( response => console.log(response))
-  // .catch(error => console.log(error));
+  getCharData('shaweaver','caelestrasz', oAuth.access_token)
+  .then( response => console.log(response))
+  .catch(error => console.log(`ERROR:${error}`));
 })
 .catch(error => console.log(error));
 

@@ -41,52 +41,55 @@ client.on("message", message =>
               message.channel.send("Character not found - try again");
             } else {
               const info = response;
-              getHonorRank(info)
-              .then(response => {
-                let honorRank;
-                if(response.title) {
-                  honorRank = response.title;
-                } else {
-                  honorRank = 'Honor Rank < 5';
-                }
+              // getHonorRank(info)
+              // .then(response => {
+              //   let honorRank;
+              //   if(response.title) {
+              //     honorRank = response.title;
+              //   } else {
+              //     honorRank = 'Honor Rank < 5';
+              //   }
                 message.delete();
-                const imgURL = charImage + info.thumbnail;
-                const playerTitles = info.titles;
-                const neckPiece = info.items.neck.azeriteItem.azeriteLevel ? `Heart of Azeroth: ${info.items.neck.azeriteItem.azeriteLevel}` : null;
-                const cloak = info.items.back.quality > 0 ? `Cloak (${info.items.back.itemLevel} ilvl)` : null;
+                // const imgURL = charImage + info.thumbnail;
+                // const neckPiece = info.items.neck.azeriteItem.azeriteLevel ? `Heart of Azeroth: ${info.items.neck.azeriteItem.azeriteLevel}` : null;
+                // const cloak = info.items.back.quality > 0 ? `Cloak (${info.items.back.itemLevel} ilvl)` : null;
                 log(`${info.name}\n${imgURL}`);
                 message.channel.send({embed: {
-                  color: classNames[info.class].color,
+                  color: classNames[info.character_class.name].color,
                   author: {
-                    name: checkTitleExists(info.name, playerTitles),
+                    // name: checkTitleExists(info.name, playerTitles),
+                    name: info.active_title.display_string.toString().replace(/(\{(name)\})/g, info.name),
                     url: `https://worldofwarcraft.com/en-us/character/${realm}/${charName}`,
                   },
-                  image: {
-                    url: imgURL.replace(/(avatar)/g, 'inset')
-                  },
+                  // image: {
+                  //   url: imgURL.replace(/(avatar)/g, 'inset')
+                  // },
                   fields: [{
-                    name: `${info.level} ${info.talents[0].spec.name} ${classNames[info.class].name}`,
-                    value: `${info.items.averageItemLevel} iLvl - ${neckPiece} - ${cloak}`,
+                    name: `${info.level} ${info.active_spec.name} ${info.character_class.name}`,
+                    value: `${info.average_item_level} iLvl`,
+                    // value: `${info.average_item_level} iLvl - ${neckPiece} - ${cloak}`,
                   },
                   {
-                    name: `${honorRank} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                    // name: `${honorRank} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                    name: `Achievement Pts: ${info.achievement_points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
                     value: '_____',
                   },
-                  {
-                    name: "Raid Progression:",
-                    value: `**Ny'alotha:** ${raidProgressCheck(info.progression.raids[44])}`,
-                  },
-                  {
-                    name: "Fun fact:",
-                    value: funFactCheck(info)
-                  }],
+                  // {
+                  //   name: "Raid Progression:",
+                  //   value: `**Ny'alotha:** ${raidProgressCheck(info.progression.raids[44])}`,
+                  // },
+                  // {
+                  //   name: "Fun fact:",
+                  //   value: funFactCheck(info)
+                  // }
+                  ],
                 }});
               })
-              .catch(error =>{
-                log(error);
-              });
-            };
-          })
+              // .catch(error =>{
+              //   log(error);
+              // });
+            // };
+          // })
           .catch(error => {
             log(error)
           });
@@ -206,9 +209,19 @@ const getAuthToken = () =>  {
     .catch(error => error.response.data);
 }
 
-const getCharData = ( charName, region, token ) =>  {
-  return axios(`https://us.api.blizzard.com/wow/character/${region}/${charName}?locale=en_US&fields=items,titles,talents,progression,achievements,stats,statistics&access_token=${token}`)
-    .then(response => response.data)
+// OLD Community API
+// const getCharData = ( charName, region, token ) =>  {
+//   return axios(`https://us.api.blizzard.com/wow/character/${region}/${charName}?locale=en_US&fields=items,titles,talents,progression,achievements,stats,statistics&access_token=${token}`)
+//     .then(response => response.data)
+//     .catch(error => error.response.data);
+// }
+
+const getCharData = ( charName, realm, token ) =>  {
+  return axios(`https://us.api.blizzard.com/profile/wow/character/${realm}/${charName}?namespace=profile-us&locale=en_US&access_token=${token}`)
+    .then(response => {
+      console.log(response);
+      return {response: response.data, token: token}
+    })
     .catch(error => error.response.data);
 }
 

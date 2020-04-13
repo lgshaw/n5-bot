@@ -41,7 +41,7 @@ client.on("message", message =>
               message.channel.send("Character not found - try again");
             } else {
               const info = response;
-              message.channel.send(response);
+              log(response);
               // getHonorRank(info)
               // .then(response => {
               //   let honorRank;

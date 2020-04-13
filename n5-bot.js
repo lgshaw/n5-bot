@@ -42,7 +42,8 @@ client.on("message", message =>
               message.channel.send("Character not found - try again");
             } else {
               log('got Profile API response');
-              const info = response.data;
+              const info = response;
+              log(response);
               // getHonorRank(info)
               // .then(response => {
               //   let honorRank;

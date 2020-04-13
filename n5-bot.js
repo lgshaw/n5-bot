@@ -40,7 +40,7 @@ client.on("message", message =>
             if(response.status === 'nok'){
               message.channel.send("Character not found - try again");
             } else {
-              const info = response.response;
+              const info = response;
               // getHonorRank(info)
               // .then(response => {
               //   let honorRank;

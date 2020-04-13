@@ -103,7 +103,7 @@ getAuthToken()
 .then( response => {
   console.log(oAuth.access_token);
   getCharData('shaweaver','caelestrasz', oAuth.access_token)
-  .then( response => console.log(response.response.character_class.name))
+  .then( response => console.log(response))
   .catch(error => console.log(`ERROR:${error}`));
 })
 .catch(error => console.log(error));

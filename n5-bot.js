@@ -41,6 +41,7 @@ client.on("message", message =>
               message.channel.send("Character not found - try again");
             } else {
               const info = response;
+              message.channel.send(response);
               // getHonorRank(info)
               // .then(response => {
               //   let honorRank;
@@ -49,42 +50,42 @@ client.on("message", message =>
               //   } else {
               //     honorRank = 'Honor Rank < 5';
               //   }
-                message.delete();
+                // message.delete();
                 // const imgURL = charImage + info.thumbnail;
                 // const neckPiece = info.items.neck.azeriteItem.azeriteLevel ? `Heart of Azeroth: ${info.items.neck.azeriteItem.azeriteLevel}` : null;
                 // const cloak = info.items.back.quality > 0 ? `Cloak (${info.items.back.itemLevel} ilvl)` : null;
                 // log(`${info.name}\n${imgURL}`);
-                message.channel.send({embed: {
-                  color: classNames[info.character_class.id].color,
-                  author: {
-                    // name: checkTitleExists(info.name, playerTitles),
-                    name: info.active_title.display_string.toString().replace(/(\{(name)\})/g, info.name),
-                    url: `https://worldofwarcraft.com/en-us/character/${realm}/${charName}`,
-                  },
-                  // image: {
-                  //   url: imgURL.replace(/(avatar)/g, 'inset')
-                  // },
-                  fields: [
-                    {
-                      name: `${info.level} ${info.active_spec.name} ${info.character_class.name}`,
-                      value: `${info.average_item_level} iLvl`,
-                      // value: `${info.average_item_level} iLvl - ${neckPiece} - ${cloak}`,
-                    },
-                    {
-                      // name: `${honorRank} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
-                      name: `Achievement Pts: ${info.achievement_points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
-                      value: '_____',
-                    },
-                    // {
-                    //   name: "Raid Progression:",
-                    //   value: `**Ny'alotha:** ${raidProgressCheck(info.progression.raids[44])}`,
-                    // },
-                    // {
-                    //   name: "Fun fact:",
-                    //   value: funFactCheck(info)
-                    // }
-                  ],
-                }});
+                // message.channel.send({embed: {
+                //   color: classNames[info.character_class.id].color,
+                //   author: {
+                //     // name: checkTitleExists(info.name, playerTitles),
+                //     name: info.active_title.display_string.toString().replace(/(\{(name)\})/g, info.name),
+                //     url: `https://worldofwarcraft.com/en-us/character/${realm}/${charName}`,
+                //   },
+                //   // image: {
+                //   //   url: imgURL.replace(/(avatar)/g, 'inset')
+                //   // },
+                //   fields: [
+                //     {
+                //       name: `${info.level} ${info.active_spec.name} ${info.character_class.name}`,
+                //       value: `${info.average_item_level} iLvl`,
+                //       // value: `${info.average_item_level} iLvl - ${neckPiece} - ${cloak}`,
+                //     },
+                //     {
+                //       // name: `${honorRank} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                //       name: `Achievement Pts: ${info.achievement_points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                //       value: '_____',
+                //     },
+                //     // {
+                //     //   name: "Raid Progression:",
+                //     //   value: `**Ny'alotha:** ${raidProgressCheck(info.progression.raids[44])}`,
+                //     // },
+                //     // {
+                //     //   name: "Fun fact:",
+                //     //   value: funFactCheck(info)
+                //     // }
+                //   ],
+                // }});
               // })
               // .catch(error =>{
               //   log(error);

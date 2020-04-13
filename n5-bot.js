@@ -64,39 +64,36 @@ client.on("message", message =>
                   // image: {
                   //   url: imgURL.replace(/(avatar)/g, 'inset')
                   // },
-                  fields: [{
-                    name: `${info.level} ${info.active_spec.name} ${info.character_class.name}`,
-                    value: `${info.average_item_level} iLvl`,
-                    // value: `${info.average_item_level} iLvl - ${neckPiece} - ${cloak}`,
-                  },
-                  {
-                    // name: `${honorRank} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
-                    name: `Achievement Pts: ${info.achievement_points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
-                    value: '_____',
-                  },
-                  // {
-                  //   name: "Raid Progression:",
-                  //   value: `**Ny'alotha:** ${raidProgressCheck(info.progression.raids[44])}`,
-                  // },
-                  // {
-                  //   name: "Fun fact:",
-                  //   value: funFactCheck(info)
-                  // }
+                  fields: [
+                    {
+                      name: `${info.level} ${info.active_spec.name} ${info.character_class.name}`,
+                      value: `${info.average_item_level} iLvl`,
+                      // value: `${info.average_item_level} iLvl - ${neckPiece} - ${cloak}`,
+                    },
+                    {
+                      // name: `${honorRank} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                      name: `Achievement Pts: ${info.achievement_points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                      value: '_____',
+                    },
+                    // {
+                    //   name: "Raid Progression:",
+                    //   value: `**Ny'alotha:** ${raidProgressCheck(info.progression.raids[44])}`,
+                    // },
+                    // {
+                    //   name: "Fun fact:",
+                    //   value: funFactCheck(info)
+                    // }
                   ],
                 }});
-              })
+              // })
               // .catch(error =>{
               //   log(error);
               // });
             // };
-          // })
-          .catch(error => {
-            log(error)
-          });
+          }})
+          .catch(error => log(error));
         })
-        .catch(error => {
-          log(error)
-        });
+        .catch(error => log(error));
       } else {
         message.channel.send('Please submit a character name (!char *name* *realm*)');
       }

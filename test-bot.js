@@ -68,7 +68,6 @@ const getAuthToken = () =>  {
 const getCharData = ( charName, realm, token ) =>  {
   return axios(`https://us.api.blizzard.com/profile/wow/character/${realm}/${charName}?namespace=profile-us&locale=en_US&access_token=${token}`)
     .then(response => {
-      console.log(response);
       return {response: response.data, token: token}
     })
     .catch(error => error.response.data);
@@ -104,7 +103,7 @@ getAuthToken()
 .then( response => {
   console.log(oAuth.access_token);
   getCharData('shaweaver','caelestrasz', oAuth.access_token)
-  .then( response => console.log(response))
+  .then( response => console.log(response.response.character_class.name))
   .catch(error => console.log(`ERROR:${error}`));
 })
 .catch(error => console.log(error));

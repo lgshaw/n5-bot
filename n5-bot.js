@@ -35,11 +35,13 @@ client.on("message", message =>
         log(`${charName} ${realm}`);
         getAuthToken()
         .then(response => {
+          log('got oAuth response');
           getCharData(charName, realm, oAuth.access_token)
           .then(response => {
             if(response.status === 'nok'){
               message.channel.send("Character not found - try again");
             } else {
+              log('got Profile API response');
               const info = response;
               log(response);
               // getHonorRank(info)
@@ -203,7 +205,7 @@ client.on("message", message =>
 
 const getAuthToken = () =>  {
   return axios(`https://us.battle.net/oauth/token?grant_type=client_credentials&client_id=${client_id}&client_secret=${client_secret}`)
-    .then(response => oAuth = response.data )
+    .then(response => oAuth = response.data)
     .catch(error => error.response.data);
 }
 

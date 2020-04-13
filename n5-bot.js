@@ -52,10 +52,10 @@ client.on("message", message =>
               //     honorRank = 'Honor Rank < 5';
               //   }
                 message.delete();
-                const imgURL = charImage + info.thumbnail;
-                const neckPiece = info.items.neck.azeriteItem.azeriteLevel ? `Heart of Azeroth: ${info.items.neck.azeriteItem.azeriteLevel}` : null;
-                const cloak = info.items.back.quality > 0 ? `Cloak (${info.items.back.itemLevel} ilvl)` : null;
-                log(`${info.name}\n${imgURL}`);
+                // const imgURL = charImage + info.thumbnail;
+                // const neckPiece = info.items.neck.azeriteItem.azeriteLevel ? `Heart of Azeroth: ${info.items.neck.azeriteItem.azeriteLevel}` : null;
+                // const cloak = info.items.back.quality > 0 ? `Cloak (${info.items.back.itemLevel} ilvl)` : null;
+                // log(`${info.name}\n${imgURL}`);
                 message.channel.send({embed: {
                   color: classNames[info.character_class.id].color,
                   author: {

@@ -55,7 +55,7 @@ client.on("message", message =>
                 // const cloak = info.items.back.quality > 0 ? `Cloak (${info.items.back.itemLevel} ilvl)` : null;
                 // log(`${info.name}\n${imgURL}`);
                 message.channel.send({embed: {
-                  color: classNames[info.character_class.name].color,
+                  // color: classNames[info.character_class.name].color,
                   author: {
                     // name: checkTitleExists(info.name, playerTitles),
                     name: info.active_title.display_string.toString().replace(/(\{(name)\})/g, info.name),

@@ -44,7 +44,7 @@ client.on("message", message =>
               log('got Profile API response');
               const charData = response.response.data;
               const mediaURI = `https://us.api.blizzard.com/profile/wow/character/${charData.realm.name.toLowerCase()}/${charData.name.toLowerCase()}/character-media?namespace=profile-us`;
-              let urls = [mediaURI, charData.achievements.href, charData.mythic_keystone_profile.href, charData.encounters.href];
+              let urls = [mediaURI, charData.achievements.href, charData.mythic_keystone_profile.href, charData.encounters.href, charData.equipment.href, charData.pvp_summary.href];
               urls = urls.map(i => i + `&locale=en_US&access_token=${token}`);
 
               Promise.all(urls.map(url => 
@@ -57,11 +57,13 @@ client.on("message", message =>
                 achievementsData = data[1].data;
                 keystoneData = data[2].data;
                 encountersData = data[3].data;
+                equipmentData = data[4].data;
+                pvpData = data[5].data;
 
                 message.delete();
                 const imgURL = mediaData.bust_url;
-                // const neckPiece = charData.items.neck.azeriteItem.azeriteLevel ? `Heart of Azeroth: ${charData.items.neck.azeriteItem.azeriteLevel}` : null;
-                // const cloak = charData.items.back.quality > 0 ? `Cloak (${charData.items.back.itemLevel} ilvl)` : null;
+                const neckPiece = charData.level == '120' ? `Heart of Azeroth: ${equipmentData.equipped_items[1].azerite_details.level} ( ${equipmentData.equipped_items[1].level.value} ilvl)` : null;
+                const cloak = charData.level == '120' ? `Cloak: ${equipmentData.equipped_items[14].name_description.display_string} ( ${equipmentData.equipped_items[14].level.value} ilvl)` : null;
 
                 message.channel.send({embed: {
                   color: classNames[charData.character_class.id].color,
@@ -75,12 +77,11 @@ client.on("message", message =>
                   fields: [
                     {
                       name: `${charData.level} ${charData.active_spec.name} ${charData.character_class.name}`,
-                      value: `${charData.average_item_level} iLvl`,
-                      // value: `${charData.average_item_level} iLvl - ${neckPiece} - ${cloak}`,
+                      value: `${charData.average_item_level} iLvl - ${neckPiece} - ${cloak}`,
                     },
                     {
                       // name: `${honorRank} - Achievement Pts: ${charData.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
-                      name: `Achievement Pts: ${charData.achievement_points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                      name: `Honor rank: ${pvpData.honor_level} - Achievement Pts: ${charData.achievement_points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
                       value: '_____',
                     },
                     // {

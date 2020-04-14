@@ -105,9 +105,10 @@ getAuthToken()
   const token = oAuth.access_token;
   getCharData('shaweaver','caelestrasz', oAuth.access_token)
   .then( response => {
-      const data = response.response;
-      const mediaURI = `https://us.api.blizzard.com/profile/wow/character/${data.realm.name.toLowerCase()}/${data.name.toLowerCase()}/character-media?namespace=profile-us`;
-      let urls = [mediaURI, data.achievements.href, data.mythic_keystone_profile.href, data.encounters.href];
+      const charData = response.response;
+      //console.log(charData);
+      const mediaURI = `https://us.api.blizzard.com/profile/wow/character/${charData.realm.name.toLowerCase()}/${charData.name.toLowerCase()}/character-media?namespace=profile-us`;
+      let urls = [mediaURI, charData.achievements.href, charData.mythic_keystone_profile.href, charData.encounters.href, charData.equipment.href, charData.pvp_summary.href];
       urls = urls.map(i => i + `&locale=en_US&access_token=${token}`);
 
       Promise.all(urls.map(url => 
@@ -115,7 +116,9 @@ getAuthToken()
         .catch(error => console.log(error))
       ))
       // All the data returned from the Promise:
-      .then(data => console.log(data[0].data))
+      .then(data => {
+        console.log(data[4].data.equipped_items[14]);
+      })
   })
   .catch(error => console.log(`CharData ERROR:${error}`));
 })

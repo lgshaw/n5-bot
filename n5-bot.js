@@ -35,52 +35,58 @@ client.on("message", message =>
         log(`${charName} ${realm}`);
         getAuthToken()
         .then(response => {
-          log('got oAuth response');
-          getCharData(charName, realm, oAuth.access_token)
+          const token = oAuth.access_token;
+          getCharData(charName, realm, token)
           .then(response => {
             if(response.status === 'nok'){
               message.channel.send("Character not found - try again");
             } else {
               log('got Profile API response');
-              const info = response.response.data;
-              log(info);
-              // getHonorRank(info)
-              // .then(response => {
-              //   let honorRank;
-              //   if(response.title) {
-              //     honorRank = response.title;
-              //   } else {
-              //     honorRank = 'Honor Rank < 5';
-              //   }
+              const charData = response.response.data;
+              const charData = response.response;
+              const mediaURI = `https://us.api.blizzard.com/profile/wow/character/${data.realm.name.toLowerCase()}/${data.name.toLowerCase()}/character-media?namespace=profile-us`;
+              let urls = [mediaURI, data.achievements.href, data.mythic_keystone_profile.href, data.encounters.href];
+              urls = urls.map(i => i + `&locale=en_US&access_token=${token}`);
+
+              Promise.all(urls.map(url => 
+                axios(url)
+                .catch(error => console.log(error))
+              ))
+              // All the data returned from the Promise:
+              .then(data => {
+                mediaData = data[0].data;
+                achievementsData = data[1].data;
+                keystoneData = data[2].data;
+                encountersData = data[3].data;
+
                 message.delete();
-                // const imgURL = charImage + info.thumbnail;
-                // const neckPiece = info.items.neck.azeriteItem.azeriteLevel ? `Heart of Azeroth: ${info.items.neck.azeriteItem.azeriteLevel}` : null;
-                // const cloak = info.items.back.quality > 0 ? `Cloak (${info.items.back.itemLevel} ilvl)` : null;
-                // log(`${info.name}\n${imgURL}`);
+                const imgURL = mediaData.bust_url;
+                // const neckPiece = charData.items.neck.azeriteItem.azeriteLevel ? `Heart of Azeroth: ${charData.items.neck.azeriteItem.azeriteLevel}` : null;
+                // const cloak = charData.items.back.quality > 0 ? `Cloak (${charData.items.back.itemLevel} ilvl)` : null;
+
                 message.channel.send({embed: {
-                  color: classNames[info.character_class.id].color,
+                  color: classNames[charData.character_class.id].color,
                   author: {
-                    // name: checkTitleExists(info.name, playerTitles),
-                    name: info.active_title.display_string.toString().replace(/(\{(name)\})/g, info.name),
+                    name: charData.active_title.display_string.toString().replace(/(\{(name)\})/g, charData.name),
                     url: `https://worldofwarcraft.com/en-us/character/${realm}/${charName}`,
                   },
-                  // image: {
-                  //   url: imgURL.replace(/(avatar)/g, 'inset')
-                  // },
+                  image: {
+                    url: imgURL,
+                  },
                   fields: [
                     {
-                      name: `${info.level} ${info.active_spec.name} ${info.character_class.name}`,
-                      value: `${info.average_item_level} iLvl`,
-                      // value: `${info.average_item_level} iLvl - ${neckPiece} - ${cloak}`,
+                      name: `${charData.level} ${charData.active_spec.name} ${charData.character_class.name}`,
+                      value: `${charData.average_item_level} iLvl`,
+                      // value: `${charData.average_item_level} iLvl - ${neckPiece} - ${cloak}`,
                     },
                     {
-                      // name: `${honorRank} - Achievement Pts: ${info.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
-                      name: `Achievement Pts: ${info.achievement_points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                      // name: `${honorRank} - Achievement Pts: ${charData.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                      name: `Achievement Pts: ${charData.achievement_points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
                       value: '_____',
                     },
                     // {
                     //   name: "Raid Progression:",
-                    //   value: `**Ny'alotha:** ${raidProgressCheck(info.progression.raids[44])}`,
+                    //   value: `**Ny'alotha:** ${raidProgressCheck(charData.progression.raids[44])}`,
                     // },
                     // {
                     //   name: "Fun fact:",
@@ -88,12 +94,9 @@ client.on("message", message =>
                     // }
                   ],
                 }});
-              // })
-              // .catch(error =>{
-              //   log(error);
-              // });
-            // };
-          }})
+              }).catch(error => log(error));
+            }
+          })
           .catch(error => log(error));
         })
         .catch(error => log(error));
@@ -145,15 +148,15 @@ client.on("message", message =>
     getAuthToken()
       .then(response => {
         getWoWTokenPrice('us', oAuth.access_token)
-        .then(info => {
-          if(info.status == "nok"){
+        .then(response => {
+          if(response.status == "nok"){
             message.channel.send("Error retrieving data");
           } else {
             message.delete();
             message.channel.send({embed: {
               fields: [{
                 name: "Current Token Price",
-                value: format((info.price / 10000)),
+                value: format((response.price / 10000)),
               },
             ],
           }});
@@ -176,11 +179,11 @@ client.on("message", message =>
     getAuthToken()
     .then(response => {
       getRealmStatus(realm, region)
-      .then(info => {
-        if(info.status == "nok"){
+      .then(response => {
+        if(response.status == "nok"){
           message.channel.send("Error retrieving realm status");
         } else {
-          if (info.realms[0].status = true)
+          if (response.realms[0].status = true)
           {
             message.channel.send(`'${realm} is **UP**'` );
           } else {

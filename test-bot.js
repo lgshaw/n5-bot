@@ -35,6 +35,7 @@
 //       console.log(timer);
 //   })
 var axios = require('axios');
+const fetch = require("node-fetch");
 
 var config = require('./config-dev.js');
 var apiKey = config.apiKey;
@@ -101,11 +102,21 @@ const getMythicData = ( name, realm, token ) =>  {
 
 getAuthToken()
 .then( response => {
-  console.log(oAuth.access_token);
+  const token = oAuth.access_token;
   getCharData('shaweaver','caelestrasz', oAuth.access_token)
-  .then( response => console.log(response))
-  .catch(error => console.log(`ERROR:${error}`));
-})
-.catch(error => console.log(error));
+  .then( response => {
+      const data = response.response;
+      const mediaURI = `https://us.api.blizzard.com/profile/wow/character/${data.realm.name.toLowerCase()}/${data.name.toLowerCase()}/character-media?namespace=profile-us`;
+      let urls = [mediaURI, data.achievements.href, data.mythic_keystone_profile.href, data.encounters.href];
+      urls = urls.map(i => i + `&locale=en_US&access_token=${token}`);
 
-//callback(var1, var2, response.data.access_token)
+      Promise.all(urls.map(url => 
+        axios(url)
+        .catch(error => console.log(error))
+      ))
+      // All the data returned from the Promise:
+      .then(data => console.log(data[0].data))
+  })
+  .catch(error => console.log(`CharData ERROR:${error}`));
+})
+.catch(error => console.log(`oAUTH ERROR:${error}`));

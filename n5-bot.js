@@ -43,8 +43,8 @@ client.on("message", message =>
             } else {
               log('got Profile API response');
               const charData = response.response.data;
-              const mediaURI = `https://us.api.blizzard.com/profile/wow/character/${data.realm.name.toLowerCase()}/${data.name.toLowerCase()}/character-media?namespace=profile-us`;
-              let urls = [mediaURI, data.achievements.href, data.mythic_keystone_profile.href, data.encounters.href];
+              const mediaURI = `https://us.api.blizzard.com/profile/wow/character/${charData.realm.name.toLowerCase()}/${charData.name.toLowerCase()}/character-media?namespace=profile-us`;
+              let urls = [mediaURI, charData.achievements.href, charData.mythic_keystone_profile.href, charData.encounters.href];
               urls = urls.map(i => i + `&locale=en_US&access_token=${token}`);
 
               Promise.all(urls.map(url => 

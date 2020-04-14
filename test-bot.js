@@ -117,7 +117,7 @@ getAuthToken()
       ))
       // All the data returned from the Promise:
       .then(data => {
-        console.log(data[4].data.equipped_items[14]);
+        console.log(data[4].data.equipped_items[1].azerite_details.level);
       })
   })
   .catch(error => console.log(`CharData ERROR:${error}`));

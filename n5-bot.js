@@ -62,7 +62,7 @@ client.on("message", message =>
 
                 message.delete();
                 const imgURL = mediaData.bust_url;
-                const neckPiece = charData.level == '120' ? `Heart of Azeroth: ${equipmentData.equipped_items[1].azerite_details.level} ( ${equipmentData.equipped_items[1].level.value} ilvl)` : null;
+                const neckPiece = charData.level == '120' ? `Heart of Azeroth: ${equipmentData.equipped_items[1].azerite_details.level.value} ( ${equipmentData.equipped_items[1].level.value} ilvl)` : null;
                 const cloak = charData.level == '120' ? `Cloak: ${equipmentData.equipped_items[14].name_description.display_string} ( ${equipmentData.equipped_items[14].level.value} ilvl)` : null;
 
                 message.channel.send({embed: {

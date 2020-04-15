@@ -80,14 +80,13 @@ client.on("message", message =>
                       value: `${charData.average_item_level} iLvl - ${neckPiece} - ${cloak}`,
                     },
                     {
-                      // name: `${honorRank} - Achievement Pts: ${charData.achievementPoints.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
                       name: `Honor rank: ${pvpData.honor_level} - Achievement Pts: ${charData.achievement_points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
                       value: '_____',
                     },
-                    // {
-                    //   name: "Raid Progression:",
-                    //   value: `**Ny'alotha:** ${raidProgressCheck(charData.progression.raids[44])}`,
-                    // },
+                    {
+                      name: "Raid Progression:",
+                      value: `**Ny'alotha:** ${raidProgressCheck(encountersData)}`,
+                    },
                     // {
                     //   name: "Fun fact:",
                     //   value: funFactCheck(info)
@@ -259,27 +258,13 @@ const searchObj = (obj, key, value) => {
   return result;
 }
 
-const raidProgressCheck = data => {
-  let bossTotal = data.bosses.length;
-  function bossKills(type) {
-    let kills = [];
-    for (var i=0; i < bossTotal; i++)
-      {
-          var n = data.bosses[i][type];
-			    if(n > 0){
-            kills.push(n);
-          }
-      }
-    return kills.length;
-  };
-  if(data.mythic > 0){
-    return `${bossKills('mythicKills')}/${bossTotal} M`;
-  } else if(data.heroic > 0){
-    return `${bossKills('heroicKills')}/${bossTotal} H`;
-  } else if(data.normal > 0){
-    return `${bossKills('normalKills')}/${bossTotal} N`;
-  } else if(data.lfr > 0){
-    return `${bossKills('lfrKills')}/${bossTotal} LFR`;
+const raidProgressCheck = (data) => {
+  if(data.expansions){
+    const [bfa] = data.expansions.slice(-1);
+    const [nya] = bfa.instances.slice(-1);
+    const [mode] = nya.modes.slice(-1);
+
+    return `${mode.progress.completed_count}/${mode.progress.total_count} ${mode.difficulty.type}`
   } else {
     return '`-`';
   };

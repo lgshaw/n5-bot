@@ -103,12 +103,14 @@ const getMythicData = ( name, realm, token ) =>  {
 getAuthToken()
 .then( response => {
   const token = oAuth.access_token;
-  getCharData('shaweaver','caelestrasz', oAuth.access_token)
+  getCharData('liet','caelestrasz', oAuth.access_token)
   .then( response => {
       const charData = response.response;
       //console.log(charData);
       const mediaURI = `https://us.api.blizzard.com/profile/wow/character/${charData.realm.name.toLowerCase()}/${charData.name.toLowerCase()}/character-media?namespace=profile-us`;
-      let urls = [mediaURI, charData.achievements.href, charData.mythic_keystone_profile.href, charData.encounters.href, charData.equipment.href, charData.pvp_summary.href];
+      const raidsURI = `https://us.api.blizzard.com/profile/wow/character/${charData.realm.name.toLowerCase()}/${charData.name.toLowerCase()}/encounters/raids?namespace=profile-us`;
+      //let urls = [mediaURI, charData.achievements.href, charData.mythic_keystone_profile.href, charData.encounters.href, charData.equipment.href, charData.pvp_summary.href];
+      let urls = [raidsURI]
       urls = urls.map(i => i + `&locale=en_US&access_token=${token}`);
 
       Promise.all(urls.map(url => 
@@ -117,7 +119,11 @@ getAuthToken()
       ))
       // All the data returned from the Promise:
       .then(data => {
-        console.log(data[4].data.equipped_items[1].azerite_details.level);
+        const test = data[0].data.expansions;
+        const [bfa] = data[0].data.expansions.slice(-1);
+        const [nya] = bfa.instances.slice(-1);
+        const [mode] = nya.modes.slice(-1);
+        console.log(`${mode.progress.completed_count}/${mode.progress.total_count} ${mode.difficulty.type}`);
       })
   })
   .catch(error => console.log(`CharData ERROR:${error}`));

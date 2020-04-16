@@ -66,7 +66,6 @@ client.on("message", message =>
                 message.delete();
                 const imgURL = mediaData.bust_url;
                 const neckPiece = charData.level == '120' && `Heart of Azeroth: ${equipmentData.equipped_items[1].azerite_details.level.value}`;
-                // TODO: What if they dont have a cloak @ 120?
                 const cloak = checkCloak(equipmentData);
 
                 message.channel.send({embed: {
@@ -272,9 +271,9 @@ const checkCloak = (equipmentData) => {
   const cloak = Object.assign(...backObj);
 
   if(cloak.name_description) {
-    return cloak.name_description.display_string;
+    return `Cloak: ${cloak.name_description.display_string}`;
   } else {
-    return '`-`';
+    return '';
   }
 };
 

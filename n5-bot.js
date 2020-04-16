@@ -89,7 +89,7 @@ client.on("message", message =>
                     {
                       name: "Progression:",
                       // TODO: Currently failing if they havent done a M+ in season 4.
-                      value: `**Ny'alotha:** ${raidProgressCheck(encountersData)} - **M+:** ${mPlusProgressCheck(keystoneData)}`,
+                      value: `**Ny'alotha:** ${raidProgressCheck(encountersData)} - **M+:** ${mPlusProgressCheck(keystoneData, token)}`,
                     },
                     // {
                     //   name: "Fun fact:",
@@ -289,7 +289,7 @@ const raidProgressCheck = (data) => {
   };
 };
 
-const mPlusProgressCheck = (data) => {
+const mPlusProgressCheck = (data, token) => {
 
   if(data.seasons){
     uri = `${data.seasons[3].key.href}&locale=en_US&access_token=${token}`;

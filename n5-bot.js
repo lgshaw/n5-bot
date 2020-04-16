@@ -45,7 +45,9 @@ client.on("message", message =>
               const charData = response.response.data;
               const mediaURI = `https://us.api.blizzard.com/profile/wow/character/${charData.realm.name.toLowerCase()}/${charData.name.toLowerCase()}/character-media?namespace=profile-us`;
               const raidsURI = `https://us.api.blizzard.com/profile/wow/character/${charData.realm.name.toLowerCase()}/${charData.name.toLowerCase()}/encounters/raids?namespace=profile-us`;
-              let urls = [mediaURI, charData.achievements.href, charData.mythic_keystone_profile.href, raidsURI, charData.equipment.href, charData.pvp_summary.href];
+              const mPlusURI = `https://us.api.blizzard.com/profile/wow/character/${charData.realm.name.toLowerCase()}/${charData.name.toLowerCase()}/mythic-keystone-profile/season/4?namespace=profile-us`
+
+              let urls = [mediaURI, charData.achievements.href, mPlusURI, raidsURI, charData.equipment.href, charData.pvp_summary.href];
               urls = urls.map(i => i + `&locale=en_US&access_token=${token}`);
 
               Promise.all(urls.map(url => 
@@ -85,8 +87,8 @@ client.on("message", message =>
                       value: '_____',
                     },
                     {
-                      name: "Raid Progression:",
-                      value: `**Ny'alotha:** ${raidProgressCheck(encountersData)}`,
+                      name: "Progression:",
+                      value: `**Ny'alotha:** ${raidProgressCheck(encountersData)} - **M+:** ${mPlusProgressCheck(keystoneData)}`,
                     },
                     // {
                     //   name: "Fun fact:",
@@ -270,6 +272,16 @@ const raidProgressCheck = (data) => {
     return '`-`';
   };
 };
+
+const mPlusProgressCheck = (data) => {
+  if(data){
+    let result = Math.max(...data.map(( {keystone_level} ) => keystone_level));
+    return result;
+  } else {
+    return '`-`';
+  }
+
+}
 
 const raiderIOScore = (region, realm, name) => {
   return axios(`https://www.raider.io/api/v1/characters/profile?region=${region}&realm=${realm}&name=${name}&fields=mythic_plus_scores`)

@@ -99,18 +99,25 @@ const getMythicData = ( name, realm, token ) =>  {
 //     .catch(error => error.message);
 // }
 ;
+const searchObj = (obj, key) => {
+  var result = obj.filter(function( e ) {
+    return e[key];
+  });
+  return result;
+}
 
 getAuthToken()
 .then( response => {
   const token = oAuth.access_token;
-  getCharData('liet','caelestrasz', oAuth.access_token)
+  getCharData('shawlock','caelestrasz', oAuth.access_token)
   .then( response => {
       const charData = response.response;
       //console.log(charData);
       const mediaURI = `https://us.api.blizzard.com/profile/wow/character/${charData.realm.name.toLowerCase()}/${charData.name.toLowerCase()}/character-media?namespace=profile-us`;
       const raidsURI = `https://us.api.blizzard.com/profile/wow/character/${charData.realm.name.toLowerCase()}/${charData.name.toLowerCase()}/encounters/raids?namespace=profile-us`;
-      //let urls = [mediaURI, charData.achievements.href, charData.mythic_keystone_profile.href, charData.encounters.href, charData.equipment.href, charData.pvp_summary.href];
-      let urls = [raidsURI]
+      const mPlusURI = `https://us.api.blizzard.com/profile/wow/character/${charData.realm.name.toLowerCase()}/${charData.name.toLowerCase()}/mythic-keystone-profile/season/4?namespace=profile-us`
+      //let urls = [mediaURI, charData.achievements.href, charData.mythic_keystone_profile.href, raidsURI, charData.equipment.href, charData.pvp_summary.href];
+      let urls = [mPlusURI]
       urls = urls.map(i => i + `&locale=en_US&access_token=${token}`);
 
       Promise.all(urls.map(url => 
@@ -119,11 +126,11 @@ getAuthToken()
       ))
       // All the data returned from the Promise:
       .then(data => {
-        const test = data[0].data.expansions;
-        const [bfa] = data[0].data.expansions.slice(-1);
-        const [nya] = bfa.instances.slice(-1);
-        const [mode] = nya.modes.slice(-1);
-        console.log(`${mode.progress.completed_count}/${mode.progress.total_count} ${mode.difficulty.type}`);
+        const test = data[0].data;
+        //let result = Math.max(...test.map(( {keystone_level} ) => keystone_level));
+        
+
+        console.log(test);
       })
   })
   .catch(error => console.log(`CharData ERROR:${error}`));

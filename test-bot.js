@@ -143,7 +143,11 @@ getAuthToken()
         if(test.seasons){
           uri = `${test.seasons[1].key.href}&locale=en_US&access_token=${token}`;
           axios(uri)
-          .then(data => console.log(data.data.best_runs))
+          .then(data => {
+            //console.log(data.data);
+            let result = Math.max(...data.data.best_runs.map(( {keystone_level} ) => keystone_level));
+            console.log(result);
+          })
         } else {
           console.log('no data')
         }

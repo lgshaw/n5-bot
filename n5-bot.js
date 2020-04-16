@@ -45,7 +45,7 @@ client.on("message", message =>
               const charData = response.response.data;
               const mediaURI = `https://us.api.blizzard.com/profile/wow/character/${charData.realm.name.toLowerCase()}/${charData.name.toLowerCase()}/character-media?namespace=profile-us`;
               const raidsURI = `https://us.api.blizzard.com/profile/wow/character/${charData.realm.name.toLowerCase()}/${charData.name.toLowerCase()}/encounters/raids?namespace=profile-us`;
-              const mPlusURI = `https://us.api.blizzard.com/profile/wow/character/${charData.realm.name.toLowerCase()}/${charData.name.toLowerCase()}/mythic-keystone-profile/season/4?namespace=profile-us`
+              const mPlusURI = `https://us.api.blizzard.com/profile/wow/character/${charData.realm.name.toLowerCase()}/${charData.name.toLowerCase()}/mythic-keystone-profile?namespace=profile-us`
 
               let urls = [mediaURI, charData.achievements.href, mPlusURI, raidsURI, charData.equipment.href, charData.pvp_summary.href];
               urls = urls.map(i => i + `&locale=en_US&access_token=${token}`);
@@ -290,13 +290,18 @@ const raidProgressCheck = (data) => {
 };
 
 const mPlusProgressCheck = (data) => {
-  if(data){
-    let result = Math.max(...data.best_runs.map(( {keystone_level} ) => keystone_level));
-    return result;
-  } else {
-    return '`-`';
-  }
 
+  if(data.seasons){
+    uri = `${data.seasons[3].key.href}&locale=en_US&access_token=${token}`;
+    axios(uri)
+    .then(data => {
+      let result = Math.max(...data.data.best_runs.map(( {keystone_level} ) => keystone_level));
+      return result;
+    })
+    .catch(error => error)
+  } else {
+    return '';
+  }
 }
 
 const raiderIOScore = (region, realm, name) => {

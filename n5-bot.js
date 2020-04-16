@@ -293,8 +293,10 @@ const mPlusProgressCheck = (data, token) => {
 
   if(data.seasons){
     uri = `${data.seasons[3].key.href}&locale=en_US&access_token=${token}`;
+    console.log(uri);
     axios(uri)
     .then(data => {
+      console.log(data);
       let result = Math.max(...data.best_runs.map(( {keystone_level} ) => keystone_level));
       return result;
     })

@@ -295,7 +295,7 @@ const mPlusProgressCheck = (data, token) => {
     uri = `${data.seasons[3].key.href}&locale=en_US&access_token=${token}`;
     axios(uri)
     .then(data => {
-      let result = Math.max(...data.data.best_runs.map(( {keystone_level} ) => keystone_level));
+      let result = Math.max(...data.best_runs.map(( {keystone_level} ) => keystone_level));
       return result;
     })
     .catch(error => error)

@@ -275,10 +275,11 @@ const raidProgressCheck = (data) => {
 
 const mPlusProgressCheck = (data) => {
   if(data){
-    let result = Math.max(...data.map(( {keystone_level} ) => keystone_level));
-    return result;
-  } else {
-    return '`-`';
+  //   let result = Math.max(...data.map(( {keystone_level} ) => keystone_level));
+  //   return result;
+  // } else {
+  //   return '`-`';
+  console.log(data);
   }
 
 }
@@ -288,19 +289,6 @@ const raiderIOScore = (region, realm, name) => {
     .then(response => response.mythic_plus_scores.all)
     .catch(error => error.message);
 }
-
-const mythicPlusCheck = (data, criteriaID) =>{
-  // var achieves = [11183,11184,11185,11162];
-  let criteriaList = data.achievements.criteria;
-  let criteriaQty = data.achievements.criteriaQuantity;
-
-  let qty = criteriaQty[criteriaList.indexOf(criteriaID)];
-  if(!qty){
-    return '-';
-  } else {
-    return qty;
-  }
-};
 
 const fetchAchievementInfo = ( id, token ) => {
   log(`getting Achievement data for: ${id}`);
@@ -313,23 +301,6 @@ const fetchAchievementInfo = ( id, token ) => {
       console.log(error);
       return error;
     });
-};
-
-const getHonorRank = (data) => {
-  let achieves = data.achievements.achievementsCompleted;
-  let filteredRanks = honorRanks.sort(((a, b) => b - a)).filter(item => 
-    achieves.includes(parseInt(item)) ? parseInt(item) : false
-  );
-    return fetchAchievementInfo(filteredRanks[0], oAuth.access_token);
-};
-
-function checkTitleExists(player, data) {
-  if (searchObj(data,'selected', true).length > 0) {
-    var activePlayerTitle = searchObj(data,'selected', true)[0].name.replace(/(%s)/g, player);
-    return activePlayerTitle;
-  } else {
-    return player;
-  };
 };
 
 function funFactCheck(data) {

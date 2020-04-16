@@ -301,7 +301,8 @@ const mPlusProgressCheck = (data, token) => {
     })
     .catch(error => error)
   } else {
-    return '';
+    console.log('no M+ data found');
+    return '` `';
   }
 }
 

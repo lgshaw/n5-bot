@@ -275,11 +275,10 @@ const raidProgressCheck = (data) => {
 
 const mPlusProgressCheck = (data) => {
   if(data){
-  //   let result = Math.max(...data.map(( {keystone_level} ) => keystone_level));
-  //   return result;
-  // } else {
-  //   return '`-`';
-  console.log(data);
+    let result = Math.max(...data.best_runs.map(( {keystone_level} ) => keystone_level));
+    return result;
+  } else {
+    return '`-`';
   }
 
 }

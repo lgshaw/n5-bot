@@ -106,6 +106,17 @@ const searchObj = (obj, key) => {
   return result;
 }
 
+const checkCloak = (charData, equipmentData) => {
+  const cloak = Object.keys(equipmentData).find(key => equipmentData[key] === "Back");
+  // if(charData.level == '120' && equipmentData.equipped_items[14]) {
+  //   return (`- Cloak: ${equipmentData.equipped_items[14].name_description.display_string}`);
+  // } else {
+  //   return;
+  // }
+
+  return cloak;
+};
+
 getAuthToken()
 .then( response => {
   const token = oAuth.access_token;
@@ -117,7 +128,7 @@ getAuthToken()
       const raidsURI = `https://us.api.blizzard.com/profile/wow/character/${charData.realm.name.toLowerCase()}/${charData.name.toLowerCase()}/encounters/raids?namespace=profile-us`;
       const mPlusURI = `https://us.api.blizzard.com/profile/wow/character/${charData.realm.name.toLowerCase()}/${charData.name.toLowerCase()}/mythic-keystone-profile/season/4?namespace=profile-us`
       //let urls = [mediaURI, charData.achievements.href, charData.mythic_keystone_profile.href, raidsURI, charData.equipment.href, charData.pvp_summary.href];
-      let urls = [mPlusURI]
+      let urls = [charData.equipment.href]
       urls = urls.map(i => i + `&locale=en_US&access_token=${token}`);
 
       Promise.all(urls.map(url => 
@@ -126,11 +137,20 @@ getAuthToken()
       ))
       // All the data returned from the Promise:
       .then(data => {
-        const test = data[0].data;
-        //let result = Math.max(...test.map(( {keystone_level} ) => keystone_level));
-        
+        const test = data[0].data.equipped_items;
+        const backObj = test.filter(obj => {          
+          return obj.slot.name === 'Back'
+        })
 
-        console.log(test);
+        const cloak = Object.assign(...backObj);
+
+        if(cloak.name_description) {
+          return console.log(cloak.name_description.display_string);
+        } else {
+          return;
+        }
+
+        // console.log(cloak.name_description);
       })
   })
   .catch(error => console.log(`CharData ERROR:${error}`));

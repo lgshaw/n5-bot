@@ -66,7 +66,8 @@ client.on("message", message =>
                 message.delete();
                 const imgURL = mediaData.bust_url;
                 const neckPiece = charData.level == '120' && `Heart of Azeroth: ${equipmentData.equipped_items[1].azerite_details.level.value}`;
-                const cloak = charData.level == '120' && `Cloak: ${equipmentData.equipped_items[14].name_description.display_string}`;
+                // TODO: What if they dont have a cloak @ 120?
+                const cloak = checkCloak(equipmentData);
 
                 message.channel.send({embed: {
                   color: classNames[charData.character_class.id].color,
@@ -80,7 +81,7 @@ client.on("message", message =>
                   fields: [
                     {
                       name: `${charData.level} ${charData.active_spec.name} ${charData.character_class.name}`,
-                      value: `${charData.average_item_level} iLvl - ${neckPiece} - ${cloak}`,
+                      value: `${charData.average_item_level} iLvl - ${neckPiece} ${cloak}`,
                     },
                     {
                       name: `Honor rank: ${pvpData.honor_level} - Achievement Pts: ${charData.achievement_points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
@@ -88,6 +89,7 @@ client.on("message", message =>
                     },
                     {
                       name: "Progression:",
+                      // TODO: Currently failing if they havent done a M+ in season 4.
                       value: `**Ny'alotha:** ${raidProgressCheck(encountersData)} - **M+:** ${mPlusProgressCheck(keystoneData)}`,
                     },
                     // {
@@ -260,6 +262,21 @@ const searchObj = (obj, key, value) => {
   });
   return result;
 }
+
+const checkCloak = (equipmentData) => {
+
+  const backObj = equipmentData.equipped_items.filter(obj => {          
+    return obj.slot.name === 'Back'
+  })
+
+  const cloak = Object.assign(...backObj);
+
+  if(cloak.name_description) {
+    return cloak.name_description.display_string;
+  } else {
+    return '`-`';
+  }
+};
 
 const raidProgressCheck = (data) => {
   if(data.expansions){

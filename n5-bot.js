@@ -290,14 +290,13 @@ const raidProgressCheck = (data) => {
 };
 
 const mPlusProgressCheck = (data, token) => {
-
+  // TODO: fix...
   if(data.seasons){
-    uri = `${data.seasons[3].key.href}&locale=en_US&access_token=${token}`;
-    console.log(uri);
+    uri = `${data.seasons[1].key.href}&locale=en_US&access_token=${token}`;
     axios(uri)
     .then(data => {
-      console.log(data);
       let result = Math.max(...data.best_runs.map(( {keystone_level} ) => keystone_level));
+      console.log(result);
       return result;
     })
     .catch(error => error)

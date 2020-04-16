@@ -141,9 +141,9 @@ getAuthToken()
         const test = data[0].data;
 
         if(test.seasons){
-          uri = `${test.seasons[3].key.href}&locale=en_US&access_token=${token}`;
+          uri = `${test.seasons[1].key.href}&locale=en_US&access_token=${token}`;
           axios(uri)
-          .then(data => console.log(data.data))
+          .then(data => console.log(data.data.best_runs))
         } else {
           console.log('no data')
         }

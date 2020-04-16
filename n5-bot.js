@@ -44,7 +44,8 @@ client.on("message", message =>
               log('got Profile API response');
               const charData = response.response.data;
               const mediaURI = `https://us.api.blizzard.com/profile/wow/character/${charData.realm.name.toLowerCase()}/${charData.name.toLowerCase()}/character-media?namespace=profile-us`;
-              let urls = [mediaURI, charData.achievements.href, charData.mythic_keystone_profile.href, charData.encounters.href, charData.equipment.href, charData.pvp_summary.href];
+              const raidsURI = `https://us.api.blizzard.com/profile/wow/character/${charData.realm.name.toLowerCase()}/${charData.name.toLowerCase()}/encounters/raids?namespace=profile-us`;
+              let urls = [mediaURI, charData.achievements.href, charData.mythic_keystone_profile.href, raidsURI, charData.equipment.href, charData.pvp_summary.href];
               urls = urls.map(i => i + `&locale=en_US&access_token=${token}`);
 
               Promise.all(urls.map(url => 

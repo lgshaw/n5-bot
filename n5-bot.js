@@ -63,42 +63,47 @@ client.on("message", message =>
                 equipmentData = data[4].data;
                 pvpData = data[5].data;
 
-                mPlusResult = mPlusProgressCheck(keystoneData, token);
+                mPlusProgressCheck(keystoneData, token)
+                .then(response => {
 
-                message.delete();
-                const imgURL = mediaData.bust_url;
-                const neckPiece = charData.level == '120' && `**Neck**: ${equipmentData.equipped_items[1].azerite_details.level.value}`;
-                const cloak = checkCloak(equipmentData);
+                  console.log(response);
+                  mPlusResult = response;
 
-                message.channel.send({embed: {
-                  color: classNames[charData.character_class.id].color,
-                  author: {
-                    name: charData.active_title.display_string.toString().replace(/(\{(name)\})/g, charData.name),
-                    url: `https://worldofwarcraft.com/en-us/character/${realm}/${charName}`,
-                  },
-                  image: {
-                    url: imgURL,
-                  },
-                  fields: [
-                    {
-                      name: `${charData.level} ${charData.active_spec.name} ${charData.character_class.name}`,
-                      value: `${charData.average_item_level} iLvl - ${neckPiece} ${cloak}`,
+                  message.delete();
+                  const imgURL = mediaData.bust_url;
+                  const neckPiece = charData.level == '120' && `**Neck**: ${equipmentData.equipped_items[1].azerite_details.level.value}`;
+                  const cloak = checkCloak(equipmentData);
+
+                  message.channel.send({embed: {
+                    color: classNames[charData.character_class.id].color,
+                    author: {
+                      name: charData.active_title.display_string.toString().replace(/(\{(name)\})/g, charData.name),
+                      url: `https://worldofwarcraft.com/en-us/character/${realm}/${charName}`,
                     },
-                    {
-                      name: `Honor rank: ${pvpData.honor_level} - Achievement Pts: ${charData.achievement_points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
-                      value: '_____',
+                    image: {
+                      url: imgURL,
                     },
-                    {
-                      name: "Progression:",
-                      // TODO: Currently failing if they havent done a M+ in season 4.
-                      value: `${raidProgressCheck(encountersData)}\n${mPlusResult}`,
-                    },
-                    // {
-                    //   name: "Fun fact:",
-                    //   value: funFactCheck(info)
-                    // }
-                  ],
-                }});
+                    fields: [
+                      {
+                        name: `${charData.level} ${charData.active_spec.name} ${charData.character_class.name}`,
+                        value: `${charData.average_item_level} iLvl - ${neckPiece} ${cloak}`,
+                      },
+                      {
+                        name: `Honor rank: ${pvpData.honor_level} - Achievement Pts: ${charData.achievement_points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                        value: '_____',
+                      },
+                      {
+                        name: "Progression:",
+                        // TODO: Currently failing if they havent done a M+ in season 4.
+                        value: `${raidProgressCheck(encountersData)}\n${mPlusResult}`,
+                      },
+                      // {
+                      //   name: "Fun fact:",
+                      //   value: funFactCheck(info)
+                      // }
+                    ],
+                  }});
+                })
               }).catch(error => log(error));
             }
           })

@@ -193,6 +193,8 @@ getAuthToken()
           console.log('no data')
         }
 
+        console.log("THIS SHOULD BE LAST");
+
       })
   })
   .catch(error => console.log(`CharData ERROR:${error}`));

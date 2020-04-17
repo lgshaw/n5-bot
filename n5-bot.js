@@ -296,11 +296,11 @@ const raidProgressCheck = (data) => {
   };
 };
 
-const mPlusProgressCheck = async (data, token) => {
+const mPlusProgressCheck = (data, token) => {
   if(data.seasons){
     const uri = `${[...data.seasons].sort(compareValues('id', 'desc'))[0].key.href}&locale=en_US&access_token=${token}`;
     
-    const result = await axios(uri)
+    axios(uri)
     .then(data => {    
       const topResult = data.data.best_runs.sort(compareValues('keystone_level', 'desc'))[0];
       const formatted = `**M+**: ${topResult.dungeon.name} +${topResult.keystone_level}`;

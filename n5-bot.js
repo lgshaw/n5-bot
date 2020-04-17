@@ -296,8 +296,7 @@ const mPlusProgressCheck = (data, token) => {
     axios(uri)
     .then(data => {    
       const topResult = data.data.best_runs.sort(compareValues('keystone_level', 'desc'))[0];
-      const formatted = '`**M+**: ${topResult.dungeon.name} +${topResult.keystone_level}`';
-      return formatted;
+      return `**M+**: ${topResult.dungeon.name} +${topResult.keystone_level}`;
     })
     .catch(error => error)
   } else {

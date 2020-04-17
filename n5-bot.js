@@ -89,7 +89,7 @@ client.on("message", message =>
                     {
                       name: "Progression:",
                       // TODO: Currently failing if they havent done a M+ in season 4.
-                      value: `${raidProgressCheck(encountersData)} ${mPlusProgressCheck(keystoneData, token)}`,
+                      value: `${raidProgressCheck(encountersData)}\n${mPlusProgressCheck(keystoneData, token)}`,
                     },
                     // {
                     //   name: "Fun fact:",
@@ -294,18 +294,15 @@ const mPlusProgressCheck = (data, token) => {
     const uri = `${[...data.seasons].sort(compareValues('id', 'desc'))[0].key.href}&locale=en_US&access_token=${token}`;
 
     axios(uri)
-    .then(data => {
-      
+    .then(data => {    
       const topResult = data.data.best_runs.sort(compareValues('keystone_level', 'desc'))[0];
-      
-      const formatted = `- **M+**: ${topResult.dungeon.name} +${topResult.keystone_level}`;
-      console.log(formatted);
+      const formatted = '`**M+**: ${topResult.dungeon.name} +${topResult.keystone_level}`';
       return formatted;
     })
     .catch(error => error)
   } else {
     console.log('no M+ data found');
-    return ` `;
+    return '';
   }
 }
 

@@ -296,7 +296,7 @@ const raidProgressCheck = (data) => {
   };
 };
 
-const mPlusProgressCheck = (data, token) => {
+const mPlusProgressCheck = async (data, token)  => {
   if(data.seasons){
     const uri = `${[...data.seasons].sort(compareValues('id', 'desc'))[0].key.href}&locale=en_US&access_token=${token}`;
     

@@ -291,14 +291,18 @@ const raidProgressCheck = (data) => {
 
 const mPlusProgressCheck = (data, token) => {
   if(data.seasons){
-    const uri = `${[...data.seasons].sort(compareValues('id', 'desc'))[0].key.href}&locale=en_US&access_token=${token}`;
+    const uri = [`${[...data.seasons].sort(compareValues('id', 'desc'))[0].key.href}&locale=en_US&access_token=${token}`];
 
-    axios(uri)
+    urls = uri.map(i => i + `&locale=en_US&access_token=${token}`);
+    
+    Promise.all(urls.map(url => 
+      axios(url)
+      .catch(error => console.log(error))
+    ))
     .then(data => {    
       const topResult = data.data.best_runs.sort(compareValues('keystone_level', 'desc'))[0];
       return `**M+**: ${topResult.dungeon.name} +${topResult.keystone_level}`;
     })
-    .catch(error => error)
   } else {
     console.log('no M+ data found');
     return '';

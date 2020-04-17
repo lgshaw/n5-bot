@@ -63,6 +63,8 @@ client.on("message", message =>
                 equipmentData = data[4].data;
                 pvpData = data[5].data;
 
+                mPlusResult = mPlusProgressCheck(keystoneData, token);
+
                 message.delete();
                 const imgURL = mediaData.bust_url;
                 const neckPiece = charData.level == '120' && `**Neck**: ${equipmentData.equipped_items[1].azerite_details.level.value}`;
@@ -89,7 +91,7 @@ client.on("message", message =>
                     {
                       name: "Progression:",
                       // TODO: Currently failing if they havent done a M+ in season 4.
-                      value: `${raidProgressCheck(encountersData)}\n${mPlusProgressCheck(keystoneData, token)}`,
+                      value: `${raidProgressCheck(encountersData)}\n${mPlusResult}`,
                     },
                     // {
                     //   name: "Fun fact:",

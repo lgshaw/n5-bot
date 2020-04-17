@@ -297,8 +297,9 @@ const mPlusProgressCheck = (data, token) => {
     .then(data => {
       
       const topResult = data.data.best_runs.sort(compareValues('keystone_level', 'desc'))[0];
-      console.log(topResult);
+      
       const formatted = `- **M+**: ${topResult.dungeon.name} +${topResult.keystone_level}`;
+      console.log(formatted);
       return formatted;
     })
     .catch(error => error)

@@ -289,20 +289,17 @@ const raidProgressCheck = (data) => {
   };
 };
 
-const mPlusProgressCheck = (data, token) => {
+const mPlusProgressCheck = async (data, token) => {
   if(data.seasons){
-    const uri = [`${[...data.seasons].sort(compareValues('id', 'desc'))[0].key.href}&locale=en_US&access_token=${token}`];
-
-    urls = uri.map(i => i + `&locale=en_US&access_token=${token}`);
+    const uri = `${[...data.seasons].sort(compareValues('id', 'desc'))[0].key.href}&locale=en_US&access_token=${token}`;
     
-    Promise.all(urls.map(url => 
-      axios(url)
-      .catch(error => console.log(error))
-    ))
+    const result = await axios(uri)
     .then(data => {    
       const topResult = data.data.best_runs.sort(compareValues('keystone_level', 'desc'))[0];
-      return `**M+**: ${topResult.dungeon.name} +${topResult.keystone_level}`;
+      const formatted = `**M+**: ${topResult.dungeon.name} +${topResult.keystone_level}`;
     })
+
+    return result;
   } else {
     console.log('no M+ data found');
     return '';

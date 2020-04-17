@@ -299,15 +299,17 @@ const raidProgressCheck = (data) => {
 const mPlusProgressCheck = async (data, token)  => {
   if(data.seasons){
     const uri = `${[...data.seasons].sort(compareValues('id', 'desc'))[0].key.href}&locale=en_US&access_token=${token}`;
-    
-    await axios(uri)
+    let result;
+
+    const getData = await axios(uri)
     .then(data => {    
       const topResult = data.data.best_runs.sort(compareValues('keystone_level', 'desc'))[0];
       const formatted = `**M+**: ${topResult.dungeon.name} +${topResult.keystone_level}`;
 
-      return formatted;
+      result = formatted;
     })
 
+    return result;
   } else {
     console.log('no M+ data found');
     return '';

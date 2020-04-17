@@ -89,7 +89,7 @@ client.on("message", message =>
                     {
                       name: "Progression:",
                       // TODO: Currently failing if they havent done a M+ in season 4.
-                      value: `**Ny'alotha:** ${raidProgressCheck(encountersData)} ${mPlusProgressCheck(keystoneData, token)}`,
+                      value: `${raidProgressCheck(encountersData)} ${mPlusProgressCheck(keystoneData, token)}`,
                     },
                     // {
                     //   name: "Fun fact:",
@@ -283,7 +283,7 @@ const raidProgressCheck = (data) => {
     const [nya] = bfa.instances.slice(-1);
     const [mode] = nya.modes.slice(-1);
 
-    return `${mode.progress.completed_count}/${mode.progress.total_count} ${mode.difficulty.type}`
+    return `**${nya.instance.name}**: ${mode.progress.completed_count}/${mode.progress.total_count} ${mode.difficulty.type}`
   } else {
     return '`-`';
   };
@@ -291,12 +291,13 @@ const raidProgressCheck = (data) => {
 
 const mPlusProgressCheck = (data, token) => {
   if(data.seasons){
-    uri = `${data.seasons[1].key.href}&locale=en_US&access_token=${token}`;
+    const uri = `${[...data.seasons].sort(compareValues('id', 'desc'))[0].key.href}&locale=en_US&access_token=${token}`;
+
     axios(uri)
     .then(data => {
-      let result = Math.max(...data.data.best_runs.map(( {keystone_level} ) => keystone_level));
-      // console.log(result);
-      return `- **M+**: ${result}`;
+      const topResult = [...data.data.best_runs].sort(compareValues('keystone_level', 'desc'))[0];
+      const formatted = `- **M+**: ${topResult.dungeon.name} +${topResult.keystone_level}`;
+      return formatted;
     })
     .catch(error => error)
   } else {

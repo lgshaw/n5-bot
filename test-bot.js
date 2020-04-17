@@ -117,6 +117,42 @@ const checkCloak = (charData, equipmentData) => {
   return cloak;
 };
 
+const raidProgressCheck = (data) => {
+  if(data.expansions){
+    const [bfa] = data.expansions.slice(-1);
+    const [nya] = bfa.instances.slice(-1);
+    const [mode] = nya.modes.slice(-1);
+
+    return `**${nya.instance.name}**: ${mode.progress.completed_count}/${mode.progress.total_count} ${mode.difficulty.type}`
+  } else {
+    return '`-`';
+  };
+};
+
+const compareValues = (key, order = 'asc') => {
+  return function innerSort(a, b) {
+    if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
+      // property doesn't exist on either object
+      return 0;
+    }
+
+    const varA = (typeof a[key] === 'string')
+      ? a[key].toUpperCase() : a[key];
+    const varB = (typeof b[key] === 'string')
+      ? b[key].toUpperCase() : b[key];
+
+    let comparison = 0;
+    if (varA > varB) {
+      comparison = 1;
+    } else if (varA < varB) {
+      comparison = -1;
+    }
+    return (
+      (order === 'desc') ? (comparison * -1) : comparison
+    );
+  };
+}
+
 getAuthToken()
 .then( response => {
   const token = oAuth.access_token;
@@ -139,13 +175,18 @@ getAuthToken()
       // All the data returned from the Promise:
       .then(data => {
         const test = data[0].data;
-
         if(test.seasons){
-          uri = `${test.seasons[1].key.href}&locale=en_US&access_token=${token}`;
+        //   test.seasons.map((data) => {
+            const uri = `${[...test.seasons].sort(compareValues('id', 'desc'))[0].key.href}&locale=en_US&access_token=${token}`;
+        //   })
+            //Object.keys(test.seasons[i]).find(key => test.seasons[key] === '4')
+          
+          // uri = `${test.seasons[1].key.href}&locale=en_US&access_token=${token}`;
           axios(uri)
           .then(data => {
             //console.log(data.data);
-            let result = Math.max(...data.data.best_runs.map(( {keystone_level} ) => keystone_level));
+            const topResult = [...data.data.best_runs].sort(compareValues('keystone_level', 'desc'))[0];
+            const result = `${topResult.dungeon.name} +${topResult.keystone_level}`;
             console.log(result);
           })
         } else {

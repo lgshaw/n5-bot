@@ -77,7 +77,7 @@ client.on("message", message =>
                   message.channel.send({embed: {
                     color: classNames[charData.character_class.id].color,
                     author: {
-                      name: charData.active_title.display_string.toString().replace(/(\{(name)\})/g, charData.name),
+                      name: charData.active_title ? charData.active_title.display_string.toString().replace(/(\{(name)\})/g, charData.name) : charData.name,
                       url: `https://worldofwarcraft.com/en-us/character/${realm}/${charName}`,
                     },
                     image: {

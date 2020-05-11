@@ -168,34 +168,37 @@ getAuthToken()
       let urls = [dungeonsURI]
       urls = urls.map(i => i + `&locale=en_US&access_token=${token}`);
 
-      Promise.all(urls.map(url => 
-        axios(url)
-        .catch(error => console.log(error))
-      ))
-      // All the data returned from the Promise:
-      .then(data => {
-        const test = data[0].data;
-        if(test.seasons){
-        //   test.seasons.map((data) => {
-            const uri = `${[...test.seasons].sort(compareValues('id', 'desc'))[0].key.href}&locale=en_US&access_token=${token}`;
-        //   })
-            //Object.keys(test.seasons[i]).find(key => test.seasons[key] === '4')
+      const name = charData.active_title ? charData.active_title.display_string.toString().replace(/(\{(name)\})/g, charData.name) : charData.name;
+
+      console.log(name);
+      // Promise.all(urls.map(url => 
+      //   axios(url)
+      //   .catch(error => console.log(error))
+      // ))
+      // // All the data returned from the Promise:
+      // .then(data => {
+      //   const test = data[0].data;
+      //   if(test.seasons){
+      //   //   test.seasons.map((data) => {
+      //       const uri = `${[...test.seasons].sort(compareValues('id', 'desc'))[0].key.href}&locale=en_US&access_token=${token}`;
+      //   //   })
+      //       //Object.keys(test.seasons[i]).find(key => test.seasons[key] === '4')
           
-          // uri = `${test.seasons[1].key.href}&locale=en_US&access_token=${token}`;
-          axios(uri)
-          .then(data => {
-            //console.log(data.data);
-            const topResult = [...data.data.best_runs].sort(compareValues('keystone_level', 'desc'))[0];
-            const result = `${topResult.dungeon.name} +${topResult.keystone_level}`;
-            console.log(result);
-          })
-        } else {
-          console.log('no data')
-        }
+      //     // uri = `${test.seasons[1].key.href}&locale=en_US&access_token=${token}`;
+      //     axios(uri)
+      //     .then(data => {
+      //       //console.log(data.data);
+      //       const topResult = [...data.data.best_runs].sort(compareValues('keystone_level', 'desc'))[0];
+      //       const result = `${topResult.dungeon.name} +${topResult.keystone_level}`;
+      //       console.log(result);
+      //     })
+      //   } else {
+      //     console.log('no data')
+      //   }
 
-        console.log("THIS SHOULD BE LAST");
+      //   console.log("THIS SHOULD BE LAST");
 
-      })
+      // })
   })
   .catch(error => console.log(`CharData ERROR:${error}`));
 })

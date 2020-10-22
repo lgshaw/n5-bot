@@ -1,14 +1,9 @@
 import Discord from "discord.js";
-import fetch from 'node-fetch';
 
-import classNames from './reference/classNames.js';
-import honorRanks from './reference/honorRanks.js';
-import getWoWToken from './util/getWoWToken.js';
 import getAuthToken from './util/getAuthToken.js';
-import { getRandomInt, format, compareValues, log, searchObj } from './util/utilFunctions.js';
-import { getCharData, getCharAchievements, raidProgressCheck } from './util/characterFunctions.js';
-import { checkCloak } from './util/BfaFunctions.js';
-import { funFactCheck, getRealmStatus, getMythicPlusAffixes, fetchAchievementInfo } from './util/miscFunctions.js';
+import { format, log } from './util/utilFunctions.js';
+import { getAllTheData } from './util/characterFunctions.js';
+import { funFactCheck, getRealmStatus, getMythicPlusAffixes } from './util/miscFunctions.js';
 
 import config from './config.js';
 const client_id = config.client_id;
@@ -88,6 +83,7 @@ client.on("message", message =>
     message.channel.send("Fetching data...")
     .then(message => {
         getMythicPlusAffixes('us')
+        .then(response => response.json())
         .then(response =>
           {
           log(response.data);
@@ -183,25 +179,25 @@ client.on("message", message =>
   }
 });
 
-const mPlusProgressCheck = async (data, token)  => {
-  if(data.seasons){
-    const uri = `${[...data.seasons].sort(compareValues('id', 'desc'))[0].key.href}&locale=en_US&access_token=${token}`;
-    let result;
+// const mPlusProgressCheck = async (data, token)  => {
+//   if(data.seasons){
+//     const uri = `${[...data.seasons].sort(compareValues('id', 'desc'))[0].key.href}&locale=en_US&access_token=${token}`;
+//     let result;
 
-    const getData = await axios(uri)
-    .then(data => {    
-      const topResult = data.data.best_runs.sort(compareValues('keystone_level', 'desc'))[0];
-      const formatted = `**M+**: ${topResult.dungeon.name} +${topResult.keystone_level}`;
+//     const getData = await axios(uri)
+//     .then(data => {    
+//       const topResult = data.data.best_runs.sort(compareValues('keystone_level', 'desc'))[0];
+//       const formatted = `**M+**: ${topResult.dungeon.name} +${topResult.keystone_level}`;
 
-      result = formatted;
-    })
+//       result = formatted;
+//     })
 
-    return result;
-  } else {
-    console.log('no M+ data found');
-    return '';
-  }
-}
+//     return result;
+//   } else {
+//     console.log('no M+ data found');
+//     return '';
+//   }
+// }
 
 
 

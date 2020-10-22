@@ -127,7 +127,7 @@ client.on("message", message =>
             message.channel.send({embed: {
               fields: [{
                 name: "Current Token Price",
-                value: format((response.price / 10000)),
+                value: format((response / 10000)),
               },
             ],
           }});

@@ -68,6 +68,10 @@ client.on("message", message =>
             ],
           }});
         })
+        .catch(() => {
+          message.delete();
+          message.channel.send('Character not found. DBS.');
+        });
       } else {
         message.channel.send('Please submit a character name (!char *name* *realm*)');
       }

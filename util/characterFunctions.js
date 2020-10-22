@@ -42,7 +42,6 @@ export const getAllTheData = async (charName, charRealm, client_id, client_secre
   await getCharData(charName, charRealm, token)
     .then(response => {
         const charData = response;
-
         const mediaURI = `https://us.api.blizzard.com/profile/wow/character/${charData.realm.slug}/${charData.name.toLowerCase()}/character-media?namespace=profile-us`;
         const raidsURI = `https://us.api.blizzard.com/profile/wow/character/${charData.realm.slug}/${charData.name.toLowerCase()}/encounters/raids?namespace=profile-us`;
         // const mPlusURI = `https://us.api.blizzard.com/profile/wow/character/${charData.realm.slug}/${charData.name.toLowerCase()}/mythic-keystone-profile/season/4?namespace=profile-us`
@@ -52,6 +51,7 @@ export const getAllTheData = async (charName, charRealm, client_id, client_secre
 
         const name = charData.active_title ? charData.active_title.display_string.toString().replace(/(\{(name)\})/g, charData.name) : charData.name;
         character_data.name = name;
+        character_data.level = charData.level;
         character_data.spec = charData.active_spec.name;
         character_data.class = charData.character_class.name;
         character_data.class_color = searchObj(classNames, 'name', character_data.class)[0].color;

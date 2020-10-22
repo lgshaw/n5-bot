@@ -50,7 +50,7 @@ client.on("message", message =>
             },
             fields: [
               {
-                name: data.name,
+                name: `${data.level} ${data.spec} ${data.class}`,
                 value: `${data.iLvl} iLvl`,
               },
               {

@@ -34,7 +34,6 @@ client.on("message", message =>
       { realm = 'caelestrasz' };
       if (charName) {
         log(`${charName} ${realm}`);
-        message.channel.send('Fetching data...');
 
         getAllTheData('shaweaver','caelestrasz', client_id, client_secret)
         .then(data => {

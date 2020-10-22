@@ -93,16 +93,16 @@ client.on("message", message =>
             message.delete();
             message.channel.send({embed: {
               fields: [{
-                name: response.data.affix_details[0].name,
-                value: response.data.affix_details[0].description,
+                name: response.affix_details[0].name,
+                value: response.affix_details[0].description,
               },
               {
-                name: response.data.affix_details[1].name,
-                value: response.data.affix_details[1].description,
+                name: response.affix_details[1].name,
+                value: response.affix_details[1].description,
               },
               {
-                name: response.data.affix_details[2].name,
-                value: response.data.affix_details[2].description,
+                name: response.affix_details[2].name,
+                value: response.affix_details[2].description,
               },
             ],
           }});

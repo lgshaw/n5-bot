@@ -35,7 +35,7 @@ client.on("message", message =>
       if (charName) {
         log(`${charName} ${realm}`);
 
-        getAllTheData('shaweaver','caelestrasz', client_id, client_secret)
+        getAllTheData(charName, realm, client_id, client_secret)
         .then(data => {
           message.delete();
           message.channel.send({embed: {

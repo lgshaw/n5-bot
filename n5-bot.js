@@ -118,9 +118,7 @@ client.on("message", message =>
 {
   message.channel.send("Fetching data...")
   .then(message => {
-    getAuthToken()
-      .then(response => {
-        getWoWTokenPrice('us', oAuth.access_token)
+        getWoWTokenPrice('us', client_id, client_secret)
         .then(response => {
           if(response.status == "nok"){
             message.channel.send("Error retrieving data");
@@ -139,10 +137,6 @@ client.on("message", message =>
         log(error)
       });
     })
-    .catch(error => {
-      log(error)
-    })
-  })
 }
 
   if(input === "!STATUS")

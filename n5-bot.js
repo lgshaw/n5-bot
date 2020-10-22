@@ -3,6 +3,7 @@ import Discord from "discord.js";
 import getAuthToken from './util/getAuthToken.js';
 import { format, log } from './util/utilFunctions.js';
 import { getAllTheData } from './util/characterFunctions.js';
+import getWoWTokenPrice from './util/getWoWToken.js';
 import { funFactCheck, getRealmStatus, getMythicPlusAffixes } from './util/miscFunctions.js';
 
 import config from './config.js';
@@ -67,10 +68,6 @@ client.on("message", message =>
             ],
           }});
         })
-        .catch(() => {
-          message.delete();
-          message.channel.send('An error occured. I failed.');
-        });
       } else {
         message.channel.send('Please submit a character name (!char *name* *realm*)');
       }
@@ -174,7 +171,21 @@ client.on("message", message =>
 
   if(input === "!HELP")
   {
-    message.channel.send('!char character-name server-name');
+    message.channel.send({embed: {
+      fields: [{
+        name: 'Character lookup',
+        value: '!char character-name server-name',
+      },
+      {
+        name: 'Weekly M+ affixes',
+        value: '!affixes',
+      },
+      {
+        name: 'WoW token pricing',
+        value: '!token',
+      },
+    ],
+    }});
   }
 });
 

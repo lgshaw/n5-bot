@@ -33,6 +33,19 @@ export const raidProgressCheck = (data) => {
     };
   };
 
+export const rawCharData = async ( charName, realm, client_id, client_secret ) => {
+  let character_data = {};
+ 
+  const token = await getAuthToken(client_id, client_secret)
+
+  await getCharData(charName, realm, token)
+    .then(response => {
+        character_data = response;
+    })
+
+    return character_data; 
+}
+
 export const getAllTheData = async (charName, charRealm, client_id, client_secret) => {
   let character_data = {};
   let data_urls = [];
@@ -55,6 +68,10 @@ export const getAllTheData = async (charName, charRealm, client_id, client_secre
         character_data.spec = charData.active_spec.name;
         character_data.class = charData.character_class.name;
         character_data.class_color = searchObj(classNames, 'name', character_data.class)[0].color;
+        character_data.convenant = { 
+          name: charData.covenant_progress ? charData.covenant_progress.chosen_covenant.name : '', 
+          renown: charData.covenant_progress ? charData.covenant_progress.renown_level : 'n/a'
+        };
         character_data.iLvl = charData.average_item_level; 
         character_data.achievement_points = charData.achievement_points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");  
 

@@ -50,8 +50,8 @@ client.on("message", message =>
             },
             fields: [
               {
-                name: `${data.level} ${data.spec} ${data.class}`,
-                value: `${data.iLvl} iLvl`,
+                name: `${data.level} ${data.convenant.name} ${data.spec} ${data.class}`,
+                value: `${data.iLvl} iLvl | Renown: ${data.covenant.name}`,
               },
               {
                 name: `Honor rank: ${data.honor_level} - Achievement Pts: ${data.achievement_points}`,

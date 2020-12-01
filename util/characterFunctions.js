@@ -68,7 +68,7 @@ export const getAllTheData = async (charName, charRealm, client_id, client_secre
         character_data.spec = charData.active_spec.name;
         character_data.class = charData.character_class.name;
         character_data.class_color = searchObj(classNames, 'name', character_data.class)[0].color;
-        character_data.convenant = { 
+        character_data.covenant = { 
           name: charData.covenant_progress ? charData.covenant_progress.chosen_covenant.name : '', 
           renown: charData.covenant_progress ? charData.covenant_progress.renown_level : 'n/a'
         };

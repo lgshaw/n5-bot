@@ -50,7 +50,7 @@ client.on("message", message =>
             },
             fields: [
               {
-                name: `${data.level} ${data.convenant.name} ${data.spec} ${data.class}`,
+                name: `${data.level} ${data.covenant.name} ${data.spec} ${data.class}`,
                 value: `${data.iLvl} iLvl | Renown: ${data.covenant.renown}`,
               },
               {

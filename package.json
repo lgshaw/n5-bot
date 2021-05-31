@@ -3,18 +3,21 @@
   "version": "9.0.1",
   "description": "",
   "main": "n5-bot.js",
-  "dependencies": {
-    "discord.js": "12.4.0",
-    "node-fetch": "^2.6.1",
-    "promise": "^8.1.0"
-  },
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=14.0.0"
   },
   "type": "module",
   "scripts": {
     "start": "node n5-bot.js"
   },
   "author": "Liam",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "13.0.0-dev.6567ba821a54d3dc97d07ce8ac55335fef2f346b",
+    "node-fetch": "^2.6.1",
+    "promise": "^8.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.3.2"
+  }
 }
